@@ -1,0 +1,31 @@
+{
+  "fps": 30,
+  "stage": { "width": 1080, "height": 1920 },
+  "assets": {
+    "bg": "./bg.png"
+  },
+  "clips": [
+    {
+      "track": "image",
+      "asset": "bg",
+      "start": 0,
+      "duration": 8,
+      "x": 0.5,
+      "y": 0.5,
+      "scale": 1
+    },
+    {
+      "track": "text",
+      "text": "Hello ELAH",
+      "start": 0.2,
+      "duration": 7.8,
+      "fontSize": 96,
+      "color": "#ffffff",
+      "fontFamily": "Arial",
+      "fontWeight": "bold",
+      "align": "center",
+      "x": 0.5,
+      "y": 0.5
+    }
+  ]
+}
