@@ -1,4 +1,4 @@
-# Project Name
+# Highness
 
 ## Team / attendee
 
@@ -22,6 +22,8 @@ If listing multiple categories, confirm eligibility with the organizers and comp
 - Open-source license (link to the license file): https://github.com/nsk6704/highness/blob/main/LICENSE
 
 ## Problem and solution
+
+Highness is for developers who want to use AI coding agents while retaining independent, runtime-controlled verification of the changes they produce.
 
 Highness gives an AI a coding task and lets it try to fix the code. Then Highness runs real tests to check the result. If the tests fail, the failure is sent back to the AI so it can try again.
 
@@ -92,6 +94,12 @@ The gpt-oss:120b model is used as the driving LLM for the agent. It is an open-w
 ### Best Open-Source AI Project
 
 - Original harness implementation or meaningful changes (if applicable):
+
+- Open-source/open-weight AI component and its role:
+  `gpt-oss:120b` is the driving open-weight model used by Highness for task reasoning and tool selection.
+
+- Code link showing the integration:
+  https://github.com/nsk6704/highness/blob/main/src/model/ollama.ts
 
 #### Original Implementation
 
