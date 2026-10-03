@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ContribReady
 
 > **From GitHub Issue to Contribution-Ready.**
