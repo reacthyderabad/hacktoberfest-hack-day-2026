@@ -1,0 +1,25 @@
+{
+  "name": "contribready",
+  "version": "1.0.0",
+  "description": "ContribReady — From GitHub Issue to Contribution-Ready. AI-powered open-source readiness platform powered by open-weight AI.",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "open-source",
+    "ai",
+    "github",
+    "open-weight",
+    "gemma",
+    "llama3",
+    "developer-tools",
+    "hackathon",
+    "mlh"
+  ],
+  "author": "ContribReady Team",
+  "license": "MIT"
+}
