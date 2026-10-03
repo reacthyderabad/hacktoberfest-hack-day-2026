@@ -1,0 +1,109 @@
+# CodeCompass — Hackathon Submission
+
+## Project Name
+
+CodeCompass
+
+## Team / Attendee
+
+- Team name: CodeCompass
+- Members and GitHub usernames:
+  - Mahesh Akula — @YOUR_GITHUB_USERNAME
+- Profile links: https://github.com/YOUR_GITHUB_USERNAME
+
+## Challenge
+
+- [x] Best Open-Source AI Project
+- [ ] Best Use of Gemma 4
+- [ ] Build on elah
+
+## Project Links
+
+- Public GitHub repository: https://github.com/YOUR_USERNAME/CodeCompass
+- Open-source license: MIT License
+
+## Problem and Solution
+
+CodeCompass is built for beginners who want to contribute to open-source projects but struggle to understand unfamiliar repositories.
+
+Users provide a public GitHub repository URL. CodeCompass analyzes the repository and presents its purpose, technology stack, stars, forks, open issues, README explanation, and an AI-generated contribution suggestion.
+
+**Input → Output:**
+
+GitHub Repository URL → Repository Analysis → AI Understanding → Contribution Opportunity
+
+## Approach and Technologies
+
+### Technologies
+
+- React
+- Vite
+- Tailwind CSS
+- Python
+- FastAPI
+- Firebase Authentication
+- GitHub REST API
+- OpenRouter
+- Qwen3-Coder
+
+GitHub's API provides real repository information such as metadata, languages, README content, and issues.
+
+The open-weight Qwen3-Coder model is used to help understand repository content and generate beginner-friendly explanations and contribution suggestions.
+
+## Challenge Evidence
+
+### Best Open-Source AI Project
+
+**Open-source/open-weight AI component and its role:**
+
+Qwen3-Coder is used as the AI reasoning component for understanding repository content and generating contribution guidance. It transforms raw repository information into beginner-friendly explanations and potential contribution opportunities.
+
+**Code link showing the integration:**
+
+`backend/app/services/ai_service.py`
+
+**Agent Skill Open Standard compliance:**
+
+Not applicable.
+
+**Original harness implementation / meaningful changes:**
+
+CodeCompass provides an original application workflow that combines GitHub repository data with an open-weight coding model to guide beginners from repository discovery to potential contribution.
+
+## Current Status
+
+### What Works
+
+- Firebase authentication
+- GitHub repository URL analysis
+- Repository metadata
+- Stars and forks
+- Technology stack detection
+- README retrieval and explanation
+- Open issue retrieval
+- AI-powered repository understanding
+- Beginner-friendly contribution suggestions
+
+### Known Limitations
+
+- AI analysis depends on available model inference.
+- Currently focused on public GitHub repositories.
+- Contribution recommendations require verification by the user before implementation.
+
+### What We Would Improve Next
+
+- Personalized skill matching
+- Deeper codebase analysis
+- Exact file/function recommendations
+- Step-by-step contribution plans
+- Contribution simulation for beginners
+- Automated PR preparation
+
+## Submission Checklist
+
+- [x] Project repository is public and links work.
+- [x] Required challenge evidence is included.
+- [x] Project uses an open-source license where required.
+- [x] Work and reused materials are represented honestly.
+- [x] No API keys, tokens, passwords, or private data are included.
+- [x] Build and submission requirements have been followed.
