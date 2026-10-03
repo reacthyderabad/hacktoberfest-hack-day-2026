@@ -1,62 +1,62 @@
-# Project Name
+# TraceLens AI
 
 ## Team / attendee
 
-- Team name (if applicable):
-- Members and GitHub usernames:
-- Profile links (optional):
+- Team name (if applicable): Individual
+- Members and GitHub usernames: Nabil (@baigny)
+- Profile links (optional): https://github.com/baigny
 
 ## Challenge
 
 Select the challenge you are entering:
 
 - [ ] Best Open-Source AI Project
-- [ ] Best Use of Gemma 4
+- [x] Best Use of Gemma 4
 - [ ] Build on elah
 
 If listing multiple categories, confirm eligibility with the organizers and complete evidence for each.
 
 ## Project links
 
-- Public GitHub repository:
-- Open-source license (link to the license file):
+- Public GitHub repository: https://github.com/baigny/tracelens-ai-gemma4
+- Open-source license: [MIT License](https://github.com/baigny/tracelens-ai-gemma4/blob/main/LICENSE)
 
 ## Problem and solution
 
-Who is this for? What problem does it solve? Describe the main input → output workflow.
+TraceLens AI helps people identify everyday objects without typing a description. In Air Trace mode, the user draws an outline in the air with an index finger; in Scan Object mode, the user captures an object with the camera. After the user selects Analyze, Gemma interprets that single image and returns a likely object name, confidence, and short description.
 
 ## Approach and technologies
 
-Describe your implementation, model(s), tools, and why you chose them. Credit reused libraries, datasets, starter code, and significant AI-assisted development.
+The app uses Next.js and React for the interface, MediaPipe Hand Landmarker for browser-local fingertip tracking in Air Trace mode, and the Google GenAI SDK to send the trace or captured photo to Gemma 4 through a server-side API route. Analysis is user-triggered; live camera frames are not sent. The response is validated as structured JSON before it is shown. Reused libraries: MediaPipe Tasks Vision and the Google GenAI SDK. No dataset or starter code is documented in the project. GitHub Copilot assisted with preparing this submission; add any other significant AI assistance used during implementation.
+
+## Demo
+
+Requires Node.js 24, a webcam for camera workflows, and a Gemini API key with access to the configured model. The project has no hosted demo.
+
+```powershell
+npm ci
+Copy-Item .env.example .env.local
+# Set GEMINI_API_KEY in .env.local, then:
+npm run dev
+```
+
+Open http://localhost:3000. In Air Trace, draw a simple object outline, stop the trace, and select Analyze with Gemma. In Scan Object, capture an object and select Analyze with Gemma. See the [project README](https://github.com/baigny/tracelens-ai-gemma4#demo-under-two-minutes) for full instructions and privacy behavior.
 
 ## Challenge evidence
 
-Complete the relevant section(s) and remove those that do not apply.
-
-### Best Open-Source AI Project
-
-- Open-source/open-weight AI component and its role:
-- Code link showing the integration:
-- Agent Skill Open Standard compliance (if applicable):
-- Original harness implementation or meaningful changes (if applicable):
+Complete the relevant section(s) and remove those that do not apply. This entry is for Best Use of Gemma 4.
 
 ### Best Use of Gemma 4
 
-- Gemma 4 model identifier and Gemini API integration:
-- Code link showing the integration:
-- Input and useful output; multimodal value where applicable:
-
-### Build on elah
-
-- Editing workflow / idea direction and elah version:
-- Model/runtime and structured-edit implementation:
-- Validation/correction metrics, caption/frame checks, or keep/discard/replay evidence for your option.
+- Gemma 4 model identifier and Gemini API integration: `gemma-4-26b-a4b-it`, called through `@google/genai` in [lib/gemma.ts](https://github.com/baigny/tracelens-ai-gemma4/blob/main/lib/gemma.ts).
+- Code link showing the integration: [Model configuration, multimodal request, and result parsing](https://github.com/baigny/tracelens-ai-gemma4/blob/main/lib/gemma.ts); [server API route and image validation](https://github.com/baigny/tracelens-ai-gemma4/blob/main/app/api/interpret/route.ts).
+- Input and useful output; multimodal value where applicable: A camera photo or air-drawn trace is sent as one image, and Gemma returns the likely object, confidence, and a concise description. Image input lets the user identify an object without translating its appearance into text first.
 
 ## Current status
 
-- What works:
-- Known limitations / incomplete features:
-- What you would improve next:
+- What works: Air Trace and Scan Object workflows are implemented, including explicit image analysis, structured result validation, and API error handling. Automated tests cover trace export and rejection cases, model-output validation, and API request validation.
+- Known limitations / incomplete features: This is a localhost prototype with no authentication or hosted demo. The project README reports that a real webcam session, successful live Gemma response, and responsive browser layout were not verified. Live model use requires the user's own API key and model access.
+- What you would improve next: Complete and record the webcam/API demo checks, test the responsive layout, and publish a demo with appropriate API-key protections.
 
 ## Submission checklist
 
