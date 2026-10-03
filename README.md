@@ -1,51 +1,50 @@
 # ContribReady
 
-> **From GitHub Issue to Contribution-Ready.**
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" />
+  <img src="https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white" alt="Node.js 20+" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" />
+  <img src="https://img.shields.io/badge/AI-Open%20Weight-8A2BE2" alt="Open-weight AI" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![MLH Challenge](https://img.shields.io/badge/MLH%20Hack%20Day-Best%20Open--Source%20AI-emerald)](https://www.mlh.com/events/react-hyderabad-hack-day/challenges)
-[![Open-Weight AI](https://img.shields.io/badge/Model-Gemma%204%20(gemma--4--31b--it)-blue)](https://ai.google.dev/gemma)
+> From GitHub Issue to Contribution-Ready.
 
-ContribReady is an open-source developer readiness platform that analyzes any public GitHub issue together with its codebase using **open-weight AI models** to prepare contributors *before* they start writing code.
+ContribReady is an AI-powered open-source readiness platform that helps developers understand a GitHub issue, find the most relevant files, learn the required concepts, and evaluate whether they are prepared to contribute confidently before opening a pull request.
 
----
-
-## The Problem
-
-Many students and beginner/intermediate developers want to contribute to open-source software, but face an intimidating knowledge barrier after finding an interesting GitHub issue.
-
-They frequently struggle with:
-- **Understanding maintainer intent:** What is the issue actually asking for in codebase terms?
-- **Locating entry points:** Which files and modules in a 10,000-file repository actually need modification?
-- **Prerequisite gaps:** Which core programming patterns (e.g., event loop lifetimes, HTTP idempotency, reconciler fibers) are required?
-- **Validation anxiety:** How does a contributor know whether they are truly prepared to write code and tests before submitting a PR?
-
-Existing tools summarize repositories or act as generic chatbots, but none bridge the specific gap between:
-> **"I found an open-source issue"** and **"I am prepared to solve this issue."**
+Whether you are a student, beginner contributor, or experienced developer exploring a new codebase, ContribReady turns a vague GitHub issue into a structured preparation workflow.
 
 ---
 
-## The Solution
+## Why this project exists
 
-ContribReady accepts a GitHub Issue URL, autonomously extracts the repository structure and high-signal source modules, and leverages open-weight AI as the central intelligence layer to provide:
+Many contributors struggle not because they lack motivation, but because they do not know:
 
-1. **Plain-English Issue Understanding:** Demystifying technical terminology into clear requirements.
-2. **Relevant File Mapping:** Scoring and highlighting priority files with exact reasons and code previews.
-3. **Required Concepts & Mini Learning:** Focused lessons on essential programming concepts with interactive self-assessment (`I know this` / `I need to learn this`).
-4. **Step-by-Step Preparation Roadmap:** Sequential learning milestones connected directly to repository files.
-5. **Interactive Ready Check (Quiz):** 3–5 dynamically generated, repository-specific questions validating the contributor's mental model.
-6. **AI Readiness Assessment & Launchpad:** Scoring, tailored review recommendations, maintainer checklist, and direct launch to the original GitHub issue.
-7. **Context-Aware Contributor AI:** Live Q&A assistant grounded in the fetched repository code.
+- what the issue is actually asking for
+- which files in a large repo matter most
+- which concepts are required before making a meaningful contribution
+- whether they are ready to begin implementing a fix
+
+ContribReady bridges that gap by combining:
+- GitHub issue and repository context extraction
+- intelligent file relevance scoring
+- concept-driven learning
+- guided readiness checks
+- contributor-focused launch guidance
 
 ---
 
-## Why Open-Weight AI?
+## Key features
 
-Open-weight AI models (such as **Google Gemma 4 (`gemma-4-31b-it`)** and **Meta Llama 3.3**) are central to ContribReady's architecture rather than decorative add-ons. 
-
-- **Code Reasoning Over Generic Chat:** Open-weight models fine-tuned on code excel at structural AST reasoning, file relevance heuristics, and extracting prerequisite concepts from complex codebases.
-- **Privacy & Local Autonomy:** By supporting providers like Ollama alongside cloud inference, ContribReady can run completely on-device without leaking proprietary codebase contexts or incurring heavy API costs.
-- **Auditable Mentorship:** Open-weight intelligence provides explainable, reproducible preparation paths and issue-specific quizzes tailored directly to the repository's patterns.
+- GitHub issue URL analysis
+- Automatic repository context gathering
+- Relevant file prioritization and snippets
+- Issue understanding in plain English
+- Concept cards and prerequisite guidance
+- Step-by-step contribution readiness roadmap
+- AI-generated readiness quiz
+- Contributor support assistant grounded in repo code
+- Open-weight AI integration with local or cloud providers
+- Demo-safe benchmark mode for hackathons and live presentations
 
 ---
 
@@ -53,184 +52,208 @@ Open-weight AI models (such as **Google Gemma 4 (`gemma-4-31b-it`)** and **Meta 
 
 ```mermaid
 flowchart TD
-    A["GitHub Issue URL"] --> B["GitHub API / Context Engine"]
-    B --> C["Tree Pruning & Noise Filter<br/>(Excludes node_modules, build, vendor)"]
-    C --> D["Heuristic File Relevance Scorer<br/>(Keyword AST & Path matching)"]
-    D --> E["Context Trimming Engine<br/>(High-signal snippets)"]
-    E --> F["Open-Weight AI Layer<br/>(Gemma 4: gemma-4-31b-it / Llama 3.3)"]
-    
-    F --> G["1. Issue Understanding & Impact"]
-    F --> H["2. Relevant Files & Previews"]
-    F --> I["3. Required Concepts & Self-Assessment"]
-    F --> J["4. Preparation Path & Practice Task"]
-    F --> K["5. Dynamic Readiness Quiz"]
-    
-    K --> L["AI Quiz Evaluation Engine"]
-    L --> M{"Readiness Score >= 70%?"}
-    M -- Yes --> N["Contribution Launchpad<br/>• Start Here Target<br/>• Then Inspect Test<br/>• Maintainer Checklist<br/>• Open Issue on GitHub"]
-    M -- No --> O["Tailored Gap Remediation<br/>• Concept Review<br/>• File Study Points<br/>• Quiz Retake"]
+    A[GitHub Issue URL] --> B[Context Engine]
+    B --> C[Tree pruning and filtering]
+    C --> D[Relevant file scoring]
+    D --> E[Context trimming and snippets]
+    E --> F[Open-weight AI layer]
+    F --> G[Issue understanding]
+    F --> H[Relevant files and previews]
+    F --> I[Required concepts]
+    F --> J[Preparation roadmap]
+    F --> K[Readiness quiz]
+    K --> L[Evaluation engine]
+    L --> M{Ready to contribute?}
+    M -- Yes --> N[Launchpad and GitHub issue link]
+    M -- No --> O[Gap remediation and retry]
 ```
 
 ---
 
-## Core Features
+## Tech stack
 
-- 🎯 **One-Click GitHub URL Analysis:** Paste any `https://github.com/owner/repo/issues/123` URL. Automatic extraction of metadata, repo description, and discussion comments.
-- 🌳 **Intelligent Context Trimming:** Automatically filters out noise (`node_modules`, `.git`, `dist`, lockfiles) and scores repository files by relevance to the issue description.
-- 🔍 **Interactive Code Previewer:** Inspect extracted code snippets directly inside the application with line numbers and syntax formatting.
-- 💡 **Mini-Learning Mode:** Interactive concept cards with explanations of why each topic matters *for this specific issue*, plus self-assessment tracking.
-- 🧪 **Repository-Specific Ready Check:** 3 to 5 realistic multiple-choice questions dynamically generated from the repository's architecture and files.
-- 📊 **Readiness Verdict & Launchpad:** Transparent scoring with clear AI-assisted preparation indicators (not a fake certification), maintainer checklists, and immediate GitHub links.
-- 💬 **Contributor AI Assistant:** Context-grounded chat drawer answering questions like *"Why is this file relevant?"* and *"What should I test first?"*.
-- ⚡ **Safe Hackathon Demo Mode:** Pre-loaded benchmark datasets (Express.js, React, Flask) ensuring zero-failure live presentations even during network drops or GitHub API rate limits.
-
----
-
-## Tech Stack
-
-| Layer | Technologies |
+| Layer | Stack |
 | --- | --- |
-| **Frontend** | React 19, Vite 8, Tailwind CSS v4, Lucide Icons, Canvas Confetti |
-| **Backend** | Node.js (v24), Express 4, Axios, Dotenv |
-| **AI Intelligence** | Open-Weight Models: Google Gemma 4 (`gemma-4-31b-it`), Meta Llama 3.3 (`llama-3.3-70b-versatile`), Qwen 2.5 Coder |
-| **Providers** | Google Gemini API (Gemma 4), Groq, OpenRouter, Ollama (Local) |
-| **Data Engine** | GitHub REST API, Recursive Git Trees API, Heuristic Keyword Matcher |
+| Frontend | React 19, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| AI Integration | Google Gemini, Groq, OpenRouter, Ollama, demo mode |
+| Data Sources | GitHub REST API, repository tree analysis |
+| UI Utilities | Lucide Icons, Canvas Confetti |
 
 ---
 
-## Setup & Installation
+## Repository structure
+
+```text
+.
+├── backend/              # Express backend
+├── frontend/             # React + Vite frontend
+├── challenges/           # Hackathon challenge docs
+├── docs/                 # Submission and project documentation
+├── submissions/          # Project submission templates/files
+├── .env.example          # Example environment configuration
+├── .gitignore
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── EVENT_README.md
+├── HACK-DAY-CRASH-COURSE.md
+├── LICENSE
+├── PRE-EVENT-PREP.md
+├── PROBLEM_STATEMENTS.md
+├── README.md
+├── render.yaml
+├── SECURITY.md
+├── SUBMISSION_TEMPLATE.md
+├── package.json
+└── ...
+```
+
+---
+
+## Getting started
 
 ### Prerequisites
-- Node.js (v18+)
-- npm or pnpm
 
-### Quick Start (Full Stack)
+- Node.js 20 or newer
+- npm
+- Optional: GitHub token
+- Optional: Gemini / Groq / OpenRouter / Ollama credentials
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/kondl/contribready.git
-   cd contribready
-   ```
+### 1) Clone the repository
 
-2. **Install all dependencies:**
-   ```bash
-   npm run install:all
-   ```
-
-3. **Configure Environment Variables (Optional):**
-   Copy `.env.example` to `backend/.env`:
-   ```bash
-   cp .env.example backend/.env
-   ```
-   *Note: If no API key is provided, ContribReady runs in Demo/Benchmark mode with full offline functionality!*
-
-4. **Build the frontend:**
-   ```bash
-   npm run build
-   ```
-
-5. **Start the application:**
-   ```bash
-   npm start
-   ```
-   Open [http://localhost:3001](http://localhost:3001) in your browser!
-
-### Development Mode
-
-To run backend and frontend with hot-reloading:
 ```bash
-# Terminal 1: Backend
-npm run dev:backend
+git clone https://github.com/ysathyasai/hacktoberfest-hack-day-2026.git
+cd hacktoberfest-hack-day-2026
+```
 
-# Terminal 2: Frontend
+### 2) Install dependencies
+
+```bash
+npm run install:all
+```
+
+This installs dependencies for both the backend and frontend.
+
+### 3) Configure environment variables
+
+Copy the environment template:
+
+```bash
+cp .env.example backend/.env
+```
+
+Update the values as needed.
+
+### 4) Run the app
+
+#### Development mode
+
+```bash
+npm run dev:backend
 npm run dev:frontend
 ```
-Open [http://localhost:5173](http://localhost:5173).
+
+The backend runs on:
+
+- `http://localhost:3001`
+
+The frontend runs on:
+
+- `http://localhost:5173`
+
+#### Production-style build
+
+```bash
+npm run build
+npm start
+```
 
 ---
 
-## Environment Variables
+## Environment variables
 
 | Variable | Description | Default |
 | --- | --- | --- |
-| `PORT` | Backend server port | `3001` |
-| `GITHUB_TOKEN` | Optional GitHub Personal Access Token (increases API limit from 60 to 5,000 req/hr) | `None` |
-| `AI_PROVIDER` | Inference provider: `gemini`, `groq`, `openrouter`, `ollama`, or `demo` | `gemini` |
-| `AI_MODEL` | Open-weight model identifier (target: `gemma-4-31b-it`) | `gemma-4-31b-it` |
-| `GEMINI_API_KEY` | Google Gemini API Key for running Gemma 4 | `None` (Falls back to benchmark mode) |
-| `OLLAMA_HOST` | Local Ollama host (if `AI_PROVIDER=ollama`) | `http://localhost:11434` |
+| `PORT` | Backend port | `3001` |
+| `GITHUB_TOKEN` | GitHub token for increased API capacity | optional |
+| `AI_PROVIDER` | Model provider (`gemini`, `groq`, `openrouter`, `ollama`, `demo`) | `gemini` |
+| `AI_MODEL` | Model name / identifier | `gemma-4-31b-it` |
+| `GEMINI_API_KEY` | API key for Gemini-based models | optional |
+| `OLLAMA_HOST` | Local Ollama endpoint | `http://localhost:11434` |
 
 ---
 
-## 2-Minute Hackathon Demo Flow
+## Available scripts
 
-| Time | Action | What to Highlight |
-| --- | --- | --- |
-| **0:00 – 0:20** | Open ContribReady homepage | Present the problem: *"Beginners find an issue on GitHub, but don't know if they have the skills or know which files to touch."* |
-| **0:20 – 0:40** | Click **"Try Demo"** or paste Express issue `#5482` | Show the multi-stage progress engine gathering git trees, scoring files, and calling the open-weight AI model. |
-| **0:40 – 1:10** | Explore **Relevant Files & Concepts** | Show that AI mapped the issue to `lib/router/layer.js` and `test/app.router.js`. Click **Inspect Snippet** to show live code. Click a concept for **Mini Learning Mode**. |
-| **1:10 – 1:40** | Take the **Readiness Quiz** | Complete the 4 repository-specific questions. Submit to trigger real-time AI evaluation and celebratory confetti! |
-| **1:40 – 2:00** | View **Contribution Launchpad** | Review the *"Start Here"* file guidance, maintainer checklist, and click **"Open Issue on GitHub"** to show the complete end-to-end journey! |
+From the root `package.json`:
+
+```bash
+npm run install:all   # install frontend + backend deps
+npm run build         # build frontend
+npm run start         # start backend
+npm run dev:backend   # run backend in watch mode
+npm run dev:frontend  # run frontend in live dev mode
+```
+
+---
+
+## Demo workflow
+
+A typical live demo flow:
+
+1. Open the app in the browser
+2. Paste a public GitHub issue URL
+3. Allow the app to fetch repository context
+4. Review relevant files, snippets, and issue summary
+5. Explore required concepts and mini-lessons
+6. Answer the repository-specific readiness quiz
+7. Review the AI assessment and launchpad recommendations
+
+This workflow helps developers understand whether they are actually ready to start contributing.
+
+---
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run validation/build checks
+5. Submit a pull request
+
+For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Code of conduct
+
+Please review our community expectations in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+---
+
+## Security
+
+If you discover a security vulnerability, please report it responsibly via the project’s security process. See [SECURITY.md](SECURITY.md).
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) — see the LICENSE file for details.
-=======
-# React Hyderabad × MLH Hack Day 2026
+This project is licensed under the [MIT License](LICENSE).
 
-Welcome to the preparation and project submission hub for **Hacktoberfest Hack Day 2026 by React Hyderabad**.
+---
 
-**Hacktoberfest Hack Day • Hyderabad | MLH × DEV × React Hyderabad**
+## Project status
 
-Build a focused project, demonstrate a working workflow, and share what you learned. Keep your project code in your own public GitHub repository; submit its details here through a pull request.
+This repository combines a working app prototype with event and submission materials for the Hacktoberfest Hack Day 2026 context. The core product is the ContribReady platform and the project is designed to be extensible for further development, demoing, and community contributions.
 
-## Start here
+---
 
-1. Read [Pre-Event Prep](PRE-EVENT-PREP.md) and the [Hack Day Crash Course](HACK-DAY-CRASH-COURSE.md). Complete the preparation before attending.
-2. Review the [three planned challenges](PROBLEM_STATEMENTS.md) and choose your project direction.
-3. Prepare your tools and sample inputs. Build your submission during the event, following the organizers' rules.
-4. Copy [the submission template](SUBMISSION_TEMPLATE.md) into `submissions/` in your fork and open a pull request.
+## Acknowledgements
 
-## Three planned challenges
-
-| Challenge | What to build | Brief |
-| --- | --- | --- |
-| Best Open-Source AI Project | A useful workflow powered by open-source or open-weight AI, an agent skill, or an original/meaningfully modified model harness | [Requirements and demo checklist](challenges/open-source-ai.md) |
-| Best Use of Gemma 4 | A focused experience using Gemma 4 through the Gemini API, with multimodal input where it adds value | [Requirements and demo checklist](challenges/gemma-4.md) |
-| Build on elah | A browser-based AI editing workflow with validated plans, preview, keep/discard/refine, and one-step reversal | [Requirements and idea directions](challenges/elah.md) |
-
-All three final briefs use a **two-hour (120-minute) build plan**. The elah examples are optional idea directions; you may build your own workflow that meets its requirements. Follow the build window and deadline announced by the organizers.
-
-See the [MLH event challenges page](https://www.mlh.com/events/react-hyderabad-hack-day/challenges) for event updates. The supplied briefs are available alongside each challenge. Partner technologies mentioned in the learning guides are optional learning resources; they do not add categories to the three challenges listed here.
-
-## Submit your project
-
-Read the [step-by-step submission guide (PDF)](docs/submission-guide.pdf) before submitting. Commit only your completed submission Markdown file here; your project code stays in your own public repository.
-
-1. Fork this repository.
-2. Build in your own public project repository.
-3. Create a branch in your fork, such as `submission/my-project`.
-4. Copy `SUBMISSION_TEMPLATE.md` to `submissions/project-name_team-or-attendee-name.md`.
-5. Complete the project details, challenge evidence, repository link, and demo instructions.
-6. Open a PR targeting this repository’s `main` branch, titled `Submission: Project Name - Team or Attendee Name`.
-
-Follow [CONTRIBUTING.md](CONTRIBUTING.md) for the full process. A PR records your project for community review; it does not replace any submission required on MLH's platform. Follow the organizers' submission and eligibility instructions. PR merging is handled by maintainers.
-
-## Before arriving
-
-- [ ] Laptop and charger
-- [ ] Git, GitHub account, and code editor
-- [ ] Node.js or Python and the tools needed for your chosen challenge
-- [ ] Prep guide and crash course completed
-- [ ] A small project idea and a sample input
-
-Learning, installing tools, and testing small examples before the event are encouraged. Do not build your Hack Day submission before the event.
-
-## Community
-
-Be welcoming, credit your sources, and share progress honestly. Read the [Code of Conduct](CODE_OF_CONDUCT.md) and [security guidance](SECURITY.md).
-
-Organized by **React Hyderabad**.
->>>>>>> 8a858b0d09062d65555c76639c37d7e83765eecc
+- Open-weight AI models
+- GitHub API ecosystem
+- React and Vite communities
+- Hacktoberfest and MLH community initiatives
