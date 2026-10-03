@@ -1,0 +1,101 @@
+Imagine-frame — Napkin Sketch to Live UI Component Engine
+Team
+Team name: Imagine-frame
+
+Members and GitHub usernames: Yuvanvenna
+
+Profile links: https://github.com/Yuvanvenna
+
+Challenge
+Select the challenge you are entering:
+
+[ ] Best Open-Source AI Project
+
+[x] Best Use of Gemma 4
+
+[ ] Build on elah
+
+Project links
+Public GitHub repository: https://github.com/Yuvanvenna/Imagine-frame
+
+Open-source license: https://github.com/Yuvanvenna/Imagine-frame(MIT License)
+
+Problem and solution
+Target Audience
+Frontend developers, UI/UX designers, and software engineers collaborating during whiteboard or napkin brainstorming sessions.
+
+The Problem
+Frontend developers waste 30+ minutes manually slicing paper wireframes and napkin sketches into layout boilerplate, flexboxes, CSS grids, and Tailwind utility classes.
+
+Input → Output Workflow
+Input: Hand-drawn wireframe sketch/photo uploaded via drag-and-drop or preloaded fail-safe samples, alongside an optional style preset choice (Modern Clean, Dark Cyberpunk, or Minimalist Slate).
+
+Processing: Fast API backend decodes the image via Pillow and sends it to Gemma 4 via the official google-genai SDK using Gemini API cloud endpoints.
+
+Output: Clean, self-contained HTML and Tailwind CSS component markup that renders inside an isolated iframe sandbox in under 3 seconds, complete with a 1-click copyable JSX/HTML code viewer.
+
+Approach and technologies
+Frontend: React 18, Vite, TypeScript, Tailwind CSS, Lucide Icons.
+
+Backend Service: FastAPI, Uvicorn, Pillow (PIL), python-multipart.
+
+AI Model & SDK: Gemma 4 (gemma-4-26b-a4b-it) via the official google-genai Python SDK on the Gemini API.
+
+Sandboxed Rendering: Isolated iframe using srcDoc with CDN-injected Tailwind CSS ([https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)).
+
+Why Chosen: Using Gemma 4 via the Gemini API provides low-latency multimodal reasoning without local GPU bottlenecks.
+
+Attribution / Credit: Built on top of standard open-source tools (fastapi, vite, tailwindcss, lucide-react).
+
+Challenge evidence
+Best Use of Gemma 4
+Gemma 4 model identifier and Gemini API integration:
+
+Model ID: gemma-4-26b-a4b-it (fallback: gemma-4-31b-it). Interfaced using google-genai SDK (genai.Client()) calling client.models.generate_content.
+
+Code link showing the integration:
+https://github.com/Yuvanvenna/Imagine-frame/tree/main/backend
+
+Input and useful output; multimodal value where applicable:
+
+Input: Visual napkin/paper wireframe drawing.
+
+Multimodal Value: Converts spatial bounding shapes, form input boxes, buttons, and handwritten text into semantic, responsive CSS flexbox/grid components with active hover states.
+
+Useful Output: Interactive, clickable Tailwind CSS component displayed inside a sandboxed live preview within 3 seconds.
+
+Current status
+What works:
+
+Full end-to-end multimodal pipeline from image upload to live sandboxed render.
+
+Theme preset selection (Modern Clean, Dark Cyberpunk, Minimalist Slate).
+
+Built-in "Load Backup Sample" button to guarantee zero demo failures if venue Wi-Fi drops.
+
+1-click code copying and syntax viewer.
+
+Known limitations / incomplete features:
+
+Optimized for atomic single-page UI components (e.g., forms, cards, dashboards) rather than multi-screen application routing.
+
+Generates structural UI and CSS layout rather than complex state management logic or backend database connections.
+
+What you would improve next:
+
+Add export support for custom design tokens and frameworks (Vue.js, Svelte, and raw React Native).
+
+Support multi-component batch scanning from a single whiteboard photo.
+
+Submission checklist
+[x] Project repository is public and links work.
+
+[x] Required challenge evidence is included.
+
+[x] Project uses an open-source license where required by the challenge.
+
+[x] Work and reused materials are represented honestly.
+
+[x] No API keys, tokens, passwords, or private data are included.
+
+[x] I followed the organizers' build window and submission instructions.
