@@ -49,7 +49,6 @@ Input: screenshot or PDF. Output: verdict, risk score, quoted red flags, next st
 - Code link showing the integration: https://github.com/asmatamkeen/scam-spotter/blob/main/main.py
 - Input and useful output; multimodal value where applicable: The input is an image of an offer letter or message. Gemma reads the layout and wording of the document itself, with no keyword matching, and returns a verdict, quoted red flags and a warning message. Reading the image is what lets it quote the exact suspicious lines.
 
-Demo video / screenshots: ADD_YOUR_VIDEO_OR_SCREENSHOT_LINK_HERE
 
 ## Current status
 
