@@ -48,4 +48,4 @@ Show the user request and AI-generated plan, then the resulting change in the ed
 - [Documentation](https://www.elah.dev/docs)
 - [AI agents guide](https://www.elah.dev/docs/agents)
 
-Source of challenge requirements: [final v6 problem statement](briefs/elah.pdf). The final brief replaces the earlier technical brief; its old package-version assumptions, five-hour milestones, fixed operation list, and option-specific metrics are not requirements of this final challenge.
+Source of challenge requirements: [Build on Elah](briefs/elah.pdf). The final brief replaces the earlier technical brief; its old package-version assumptions, five-hour milestones, fixed operation list, and option-specific metrics are not requirements of this final challenge.

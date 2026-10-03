@@ -32,4 +32,4 @@ Explain a screenshot error, extract fields or actions from a document, summarize
 
 Show the input and then the Gemma result. Explain the problem in one sentence and show where multimodal understanding adds value. Identify the model and API integration in your code. Keep the demo under two minutes, test it twice, and have a fallback sample or screenshot if the API call fails.
 
-Source: [final v6 problem statement](briefs/gemma-4.pdf). Event updates: [MLH challenges](https://www.mlh.com/events/react-hyderabad-hack-day/challenges).
+Source: [Best Use of Gemma 4](briefs/gemma-4.pdf). Event updates: [MLH challenges](https://www.mlh.com/events/react-hyderabad-hack-day/challenges).

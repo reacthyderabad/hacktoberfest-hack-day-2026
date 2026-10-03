@@ -3,7 +3,7 @@
 Add your completed [submission template](../SUBMISSION_TEMPLATE.md) here as:
 
 ```text
-project-name_team-or-attendee-name.md
+project-name_teamname.md
 ```
 
 Example filename: `caption-copilot_team-frame.md`.

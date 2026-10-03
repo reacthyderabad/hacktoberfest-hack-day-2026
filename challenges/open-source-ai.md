@@ -33,4 +33,4 @@ Explain an unfamiliar repository, help contributors navigate an open-source proj
 
 Show the public repository and license. Identify the AI component and explain why it matters. Run the core workflow live. For a skill, demonstrate invocation and the result; for a harness, explain the original implementation or meaningful modification.
 
-Source: [final v6 problem statement](briefs/open-source-ai.pdf). Event updates: [MLH challenges](https://www.mlh.com/events/react-hyderabad-hack-day/challenges).
+Source: [Best Open-Source AI Project](briefs/open-source-ai.pdf). Event updates: [MLH challenges](https://www.mlh.com/events/react-hyderabad-hack-day/challenges).
