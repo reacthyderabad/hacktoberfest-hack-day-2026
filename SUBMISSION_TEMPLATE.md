@@ -1,68 +1,102 @@
-# Project Name
+# UI Detective
 
 ## Team / attendee
 
-- Team name (if applicable):
+- Team name (if applicable): UI Detective
 - Members and GitHub usernames:
-- Profile links (optional):
+  - Reyan Khan — @Reyan-khan1811
+  - Mohd Suhel — @suhel-bin-nisar
+- Profile links (optional):https://github.com/suhel-bin-nisar
+  - https://github.com/Reyan-khan1811
+
 
 ## Challenge
 
 Select the challenge you are entering:
 
 - [ ] Best Open-Source AI Project
-- [ ] Best Use of Gemma 4
+- [x] Best Use of Gemma 4
 - [ ] Build on elah
-
-If listing multiple categories, confirm eligibility with the organizers and complete evidence for each.
 
 ## Project links
 
-- Public GitHub repository:
-- Open-source license (link to the license file):
+- Public GitHub repository: https://github.com/Reyan-khan1811/ui-detective
+- Open-source license (link to the license file): [Add your LICENSE link if the repository contains a license]
 
 ## Problem and solution
 
-Who is this for? What problem does it solve? Describe the main input → output workflow.
+UI Detective helps developers bridge the gap between a visual website design and its implementation.
+
+The user uploads a screenshot of a website interface. The application sends the image to Gemma 4 for multimodal analysis. Gemma identifies the visible UI elements, layout, and structure, and the application uses the analysis to help generate reusable React UI components.
+
+Main workflow:
+
+Screenshot → Gemma 4 analysis → UI structure → React component/code
 
 ## Approach and technologies
 
-Describe your implementation, model(s), tools, and why you chose them. Credit reused libraries, datasets, starter code, and significant AI-assisted development.
+UI Detective is built as a React + Vite frontend with a Node.js + Express backend.
+
+The project uses Gemma 4 through the Gemini API for multimodal screenshot understanding. The frontend provides the screenshot upload interface, preview, analysis interface, and generated-code display. The backend receives the image and communicates with the Gemini API while keeping the API key on the server side.
+
+Technologies used:
+- Gemma 4 / Gemini API
+- React.js
+- Vite
+- JavaScript
+- Node.js
+- Express.js
+- HTML/CSS
+- Git/GitHub
+
+The project was developed during the Hack Day build window with AI-assisted development used during implementation.
 
 ## Challenge evidence
-
-Complete the relevant section(s) and remove those that do not apply.
-
-### Best Open-Source AI Project
-
-- Open-source/open-weight AI component and its role:
-- Code link showing the integration:
-- Agent Skill Open Standard compliance (if applicable):
-- Original harness implementation or meaningful changes (if applicable):
 
 ### Best Use of Gemma 4
 
 - Gemma 4 model identifier and Gemini API integration:
+  Gemma 4 is accessed through the Google Gemini API from the Node.js/Express backend.
+
 - Code link showing the integration:
+  https://github.com/Reyan-khan1811/ui-detective/blob/main/server/index.js
+
 - Input and useful output; multimodal value where applicable:
+  Input: a website screenshot uploaded by the user.
 
-### Build on elah
+  Output: Gemma 4 analyzes the visual interface and identifies UI elements and layout information that can be used to create reusable React components.
 
-- Editing workflow / idea direction and elah version:
-- Model/runtime and structured-edit implementation:
-- Validation/correction metrics, caption/frame checks, or keep/discard/replay evidence for your option.
+  The multimodal capability is important because the primary input is a visual screenshot rather than only text.
 
 ## Current status
 
 - What works:
+  - React frontend
+  - Screenshot upload
+  - Image preview
+  - UI analysis interface
+  - React code output interface
+  - Node.js/Express backend
+  - Gemini API integration
+  - GitHub repository and collaborative development workflow
+
 - Known limitations / incomplete features:
+  - The public deployment of the backend/API is not yet complete.
+  - AI analysis requires a valid Gemini API key configured on the backend.
+  - Generated React code and analysis can be further refined for different UI styles and complex layouts.
+
 - What you would improve next:
+  - Deploy the backend for a fully public demo.
+  - Improve prompt engineering and generated React code quality.
+  - Add more detailed component and layout detection.
+  - Add responsive-layout detection.
+  - Improve error handling and loading states.
 
 ## Submission checklist
 
-- [ ] Project repository is public and links work.
-- [ ] Required challenge evidence is included.
+- [x] Project repository is public and links work.
+- [x] Required challenge evidence is included.
 - [ ] Project uses an open-source license where required by the challenge.
-- [ ] Work and reused materials are represented honestly.
-- [ ] No API keys, tokens, passwords, or private data are included.
-- [ ] I followed the organizers' build window and submission instructions.
+- [x] Work and reused materials are represented honestly.
+- [x] No API keys, tokens, passwords, or private data are included.
+- [x] I followed the organizers' build window and submission instructions.
