@@ -1,0 +1,313 @@
+/* Playground shell — aligned with the editor theme (components/playground/theme.ts).
+   Applied to .pg-shell on the layout root. */
+
+.pg-shell {
+  /* ── Surface hierarchy (tonal layers, no shadows) ── */
+  --pg-bg:               #06070A; /* deepest background — matches theme.bgPrimary */
+  --pg-bg-secondary:     #0D1017; /* shell chrome — theme.bgSecondary */
+  --pg-bg-panel:         #121722; /* sidebars, panels — theme.bgPanel */
+  --pg-bg-container:     #151A26; /* cards, sections */
+  --pg-bg-elevated:      #171D2B; /* modals, menus, hover — theme.bgElevated */
+  --pg-bg-highest:       #232938; /* scrollbar, chips — theme.border */
+
+  /* ── Borders / outlines ── */
+  --pg-border:           #232938; /* component edges — theme.border */
+  --pg-border-subtle:    #1A1F2B; /* hairline — theme.borderSubtle */
+  --pg-outline:          #3A4256; /* focused / interactive edges */
+
+  /* ── Text ── */
+  --pg-text:             #F3F4F6; /* theme.textPrimary */
+  --pg-text-secondary:   #A7AFBF; /* theme.textSecondary */
+  --pg-text-muted:       #6B7280; /* theme.textMuted */
+
+  /* ── Accent — Rose signal ── */
+  --pg-accent:           #E11D48; /* theme.accent — button fill, active state */
+  --pg-accent-hover:     #FB7185; /* theme.accentHover — hover lift */
+  --pg-accent-text:      #FFFFFF; /* text on accent fill */
+  --pg-accent-dim:       #FB7185; /* highlight, underlines, focus rings */
+  --pg-accent-glow:      rgba(225, 29, 72, 0.35);
+  --pg-accent-soft:      rgba(225, 29, 72, 0.12);
+
+  /* Elah editor tokens — shared chrome (nav tabs, BackButton) rendered here on
+     Timeline/Raw, and inside .elah-root on Production, needs these outside
+     .elah-root too, otherwise the ed-* utility classes silently fail to
+     resolve (values match globals.css .elah-root exactly). */
+  --elah-accent: #00c2ff;
+  --elah-bg-elevated: #171d2b;
+  --elah-border: #232938;
+  --elah-text: #f3f4f6;
+
+  /* ── Typography ── */
+  --pg-font-ui:    'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --pg-font-mono:  'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* Mobile Chrome: 100vh is the large viewport (URL bar retracted), which
+     pushes the bottom bar behind the toolbar. dvh tracks the visible height. */
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--pg-bg);
+  color: var(--pg-text);
+  font-family: var(--pg-font-ui);
+}
+
+/* ── Navigation bar ──────────────────────────────────────────────────────── */
+
+.pg-nav {
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 12px;
+  background: var(--pg-bg-secondary);
+  border-bottom: 1px solid var(--pg-border);
+  z-index: 10;
+}
+
+.pg-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: var(--pg-font-mono);
+  letter-spacing: 0.04em;
+  color: var(--pg-text-muted);
+  text-decoration: none;
+  transition: color 0.12s, background 0.12s;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pg-nav-back:hover {
+  color: var(--pg-text);
+  background: var(--pg-bg-elevated);
+}
+
+/* Brand lockup — accent dot + wordmark + package label */
+.pg-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 4px;
+}
+
+.pg-brand-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pg-accent);
+  box-shadow: 0 0 8px var(--pg-accent-glow);
+  flex-shrink: 0;
+}
+
+.pg-brand-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pg-text);
+}
+
+.pg-brand-pkg {
+  font-size: 11px;
+  font-family: var(--pg-font-mono);
+  color: var(--pg-text-muted);
+}
+
+.pg-nav-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--pg-border);
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
+/* ── Tabs — segmented control ─────────────────────────────────────────────── */
+
+.pg-nav-tabs {
+  display: flex;
+  margin-left: auto;
+  border: 1px solid var(--elah-accent);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* In the merged production header the tabs sit beside the brand, not pushed
+   to the far edge — neutralize the segmented control's auto margin. */
+.elah-app-header .pg-nav-tabs {
+  margin-left: 0;
+}
+
+.pg-nav-tab {
+  position: relative;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--pg-font-ui);
+  letter-spacing: 0.01em;
+  color: var(--pg-text-muted);
+  text-decoration: none;
+  background: transparent;
+  border-right: 1px solid var(--elah-accent);
+  transition: color 0.12s;
+}
+
+.pg-nav-tab:last-child {
+  border-right: none;
+}
+
+.pg-nav-tab:hover {
+  color: var(--pg-text-secondary);
+}
+
+.pg-nav-tab[data-active='true'] {
+  color: var(--elah-accent);
+  font-weight: 600;
+}
+
+/* ── External / GitHub link ──────────────────────────────────────────────── */
+
+.pg-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--pg-text-muted);
+  text-decoration: none;
+  transition: color 0.12s, background 0.12s;
+}
+
+.pg-nav-link:hover {
+  color: var(--pg-text);
+  background: var(--pg-bg-elevated);
+}
+
+/* ── Content area ────────────────────────────────────────────────────────── */
+
+.pg-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Touch layout: gesture surfaces own their pans — never rubber-band the shell,
+   and two-finger pinch belongs to the editor (timeline zoom), not page zoom.
+   touch-action intersects down the chain, so one rule here covers the shell. */
+@media (max-width: 767px) {
+  .pg-shell {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* ── Editor chrome ───────────────────────────────────────────────────────── */
+/* Token definitions live in globals.css .elah-root; only presentational     */
+/* and scrollbar rules belong here.                                           */
+
+.elah-root {
+  font-family: var(--elah-font-ui);
+  color: var(--elah-text);
+  background: var(--elah-bg);
+}
+
+.elah-root *::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.elah-root *::-webkit-scrollbar-thumb {
+  background: var(--elah-bg-highest);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.elah-root *::-webkit-scrollbar-thumb:hover {
+  background: var(--elah-outline);
+  background-clip: padding-box;
+}
+.elah-root *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Range / scrubber ────────────────────────────────────────────────────── */
+
+.elah-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  /* Lighter than the panels it sits on (was --pg-bg-panel, which matched the
+     properties-panel bg and made the track invisible). */
+  background: var(--pg-bg-highest);
+  outline: none;
+}
+.elah-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  /* Editor accent (cyan) — the zoom thumb belongs to the editor toolbar, not the
+     marketing shell, so it follows --elah-accent rather than the rose --pg-accent. */
+  background: var(--elah-accent);
+  border: 2px solid var(--pg-bg-elevated);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--elah-accent-glow);
+}
+.elah-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--elah-accent);
+  border: 2px solid var(--pg-bg-elevated);
+  cursor: pointer;
+}
+
+/* ── Toolbar buttons ─────────────────────────────────────────────────────── */
+
+.elah-toolbar-btn:hover:not(:disabled) {
+  background: var(--elah-bg-elevated) !important;
+  border-color: var(--elah-outline) !important;
+  color: var(--elah-text) !important;
+}
+.elah-toolbar-btn--active {
+  background: var(--elah-accent-soft) !important;
+  border-color: var(--elah-accent) !important;
+  color: var(--elah-accent-dim) !important;
+  box-shadow: 0 0 12px var(--elah-accent-glow);
+}
+
+/* ── Export / primary action button ─────────────────────────────────────── */
+
+.elah-export-btn {
+  background: var(--elah-accent) !important;
+  border-color: var(--elah-accent) !important;
+  color: var(--elah-accent-text) !important;
+  font-family: var(--elah-font-mono) !important;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 18px !important;
+}
+.elah-export-btn:hover {
+  background: var(--elah-accent-hover) !important;
+  border-color: var(--elah-accent-hover) !important;
+}
+
+/* ── Media / element cards ───────────────────────────────────────────────── */
+
+.elah-media-card:hover {
+  background: var(--elah-bg-elevated) !important;
+  border-color: var(--elah-outline) !important;
+}
+.elah-element-card:hover {
+  background: var(--elah-bg-elevated) !important;
+  border-color: var(--elah-outline) !important;
+}

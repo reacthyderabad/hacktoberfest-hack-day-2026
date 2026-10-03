@@ -1,0 +1,270 @@
+import type { Metadata } from 'next'
+import { CodeBlock } from '@/components/docs/CodeBlock'
+import { DocsToc } from '@/components/docs/DocsToc'
+import { currentVersion } from '@/config/changelog'
+import { PageHeader } from '@/components/site/PageHeader'
+
+export const metadata: Metadata = {
+  title: 'Installation',
+  description:
+    'Install @elah/editor and its peer dependencies, and configure Next.js or Vite to run the elah video editor SDK.',
+  alternates: { canonical: '/docs/installation' },
+}
+
+const toc = [
+  { id: 'requirements', title: 'Requirements', level: 2 },
+  { id: 'npm-install', title: 'Install', level: 2 },
+  { id: 'cli-install', title: 'CLI (optional)', level: 2 },
+  { id: 'peer-deps', title: 'Peer Dependencies', level: 2 },
+  { id: 'nextjs-config', title: 'Next.js Setup', level: 2 },
+  { id: 'vite-config', title: 'Vite Setup', level: 2 },
+]
+
+export default function InstallationPage() {
+  return (
+    <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+      <article className="min-w-0 flex-1 max-w-3xl">
+        <PageHeader
+          variant="doc"
+          id="installation"
+          eyebrow="Getting Started"
+          title="Installation"
+          lede={
+            <>
+              Add elah to your React application. The SDK is published to npm as{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-sm font-mono">@elah/editor</code> — install it with your package manager and wire it into Next.js or Vite. It pulls in{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-sm font-mono">@elah/core</code>,{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-sm font-mono">@elah/timeline</code>, and{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-sm font-mono">@elah/react</code> automatically.
+            </>
+          }
+        />
+
+        {/* Requirements */}
+        <section className="mb-10">
+          <h2 id="requirements" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            Requirements
+          </h2>
+          <div className="overflow-hidden rounded-md border border-outline-variant">
+            {[
+              { dep: 'React', version: '≥ 18.0', note: 'Concurrent mode required for Zustand subscription performance' },
+              { dep: 'TypeScript', version: '≥ 5.0', note: 'Strict mode recommended' },
+              { dep: 'Node.js', version: '≥ 18.0', note: 'Required for build tooling' },
+              { dep: 'Browser', version: 'Chromium 108+', note: 'WebCodecs + WebGL2 required; Firefox partial support' },
+              { dep: 'mediabunny', version: 'bundled', note: 'Ships as a dependency of @elah/core — no separate install needed' },
+            ].map((row, i) => (
+              <div
+                key={row.dep}
+                className={`flex flex-col gap-1 border-b border-outline-variant p-3 last:border-0 sm:flex-row sm:items-start sm:gap-4 ${i % 2 === 0 ? 'bg-surface-low' : 'bg-surface-lowest'}`}
+              >
+                <div className="font-mono text-xs font-medium text-on-surface sm:w-28 sm:shrink-0">{row.dep}</div>
+                <div className="font-mono text-xs text-on-surface-variant sm:w-24 sm:shrink-0">{row.version}</div>
+                <div className="text-xs text-on-surface-variant">{row.note}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Install */}
+        <section className="mb-10">
+          <h2 id="npm-install" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            Install
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-on-surface-variant">
+            Install <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/editor</code> and{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">lucide-react</code>. The decode/export
+            backend (<code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">mediabunny</code>) ships bundled —
+            there&apos;s nothing else to add:
+          </p>
+          <CodeBlock
+            language="bash"
+            filename="npm"
+            code={`npm install @elah/editor lucide-react`}
+          />
+          <p className="mt-4 mb-4 text-sm leading-relaxed text-on-surface-variant">
+            Using a different package manager:
+          </p>
+          <CodeBlock
+            language="bash"
+            filename="pnpm / yarn / bun"
+            code={`pnpm add @elah/editor lucide-react
+yarn add @elah/editor lucide-react
+bun add @elah/editor lucide-react`}
+          />
+        </section>
+
+        {/* CLI install */}
+        <section className="mb-10">
+          <h2 id="cli-install" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            CLI (optional)
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-on-surface-variant">
+            Want to render on a server instead of (or alongside) the browser? Install{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/cli</code> — it runs
+            core&apos;s real export pipeline headlessly, so output is bit-identical to the editor:
+          </p>
+          <CodeBlock
+            language="bash"
+            filename="npm"
+            code={`npm install -g @elah/cli`}
+          />
+          <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+            See{' '}
+            <a href="/docs/cli" className="text-primary hover:underline">
+              CLI &amp; Server
+            </a>{' '}
+            for commands, the build spec, and self-hosting a render server.
+          </p>
+        </section>
+
+        {/* Peer dependencies */}
+        <section className="mb-10">
+          <h2 id="peer-deps" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            Peer Dependencies
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-on-surface-variant">
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/editor</code> expects your app to
+            provide <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">react</code>,{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">react-dom</code>, and{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">lucide-react</code> (the timeline uses it
+            for clip icons). <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/core</code>,{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/react</code>,{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/timeline</code>, and{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">mediabunny</code> are pulled in
+            transitively. A typical <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">package.json</code>{' '}
+            looks like:
+          </p>
+          <CodeBlock
+            language="json"
+            filename="package.json"
+            code={`{
+  "dependencies": {
+    "@elah/editor": "^${currentVersion}",
+    "lucide-react": "^0.400.0",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  }
+}`}
+          />
+          <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+            npm auto-installs peer dependencies, so omitting{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">lucide-react</code> can appear to work —
+            pnpm and yarn do not, and neither do most AI hosting sandboxes. Always declare it.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+            The package ships ESM with bundled TypeScript declarations — no separate{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@types</code> install required.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+            Building custom UI on <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/core</code> without the full editor? Install{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/react</code> directly for the hooks (<code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">useTracksStore</code>, <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">useAudioMixer</code>, etc.) without pulling in <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/timeline</code>&apos;s UI components.
+          </p>
+        </section>
+
+        {/* Next.js setup */}
+        <section className="mb-10">
+          <h2 id="nextjs-config" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            Next.js Setup
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-on-surface-variant">
+            Add the SDK packages to <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">transpilePackages</code> so the bundler can resolve the export Web Worker that <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/core</code> spawns via <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">new URL('./ExportWorker.js', import.meta.url)</code>:
+          </p>
+          <CodeBlock
+            language="javascript"
+            filename="next.config.mjs"
+            code={`/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  // @elah/editor (+ its @elah/core / @elah/react / @elah/timeline deps) and
+  // mediabunny ship modern ESM that must be transpiled by the consuming app.
+  // Required — without it the build fails on the @elah/editor barrel.
+  transpilePackages: ['@elah/editor', '@elah/core', '@elah/react', '@elah/timeline', 'mediabunny'],
+}
+
+export default nextConfig`}
+          />
+          <p className="mt-4 mb-4 text-sm leading-relaxed text-on-surface-variant">
+            The editor touches browser-only APIs (Canvas, Web Audio, Workers), so render it client-side only with a dynamic import:
+          </p>
+          <CodeBlock
+            language="tsx"
+            filename="app/editor/page.tsx"
+            code={`'use client'
+
+import dynamic from 'next/dynamic'
+
+// ssr: false keeps the editor out of the server bundle.
+const Editor = dynamic(() => import('@/components/Editor'), {
+  ssr: false,
+})
+
+export default function Page() {
+  return <Editor />
+}`}
+          />
+        </section>
+
+        {/* Vite setup */}
+        <section className="mb-10">
+          <h2 id="vite-config" className="mb-4 text-xl font-semibold tracking-tight text-on-surface scroll-mt-28 md:scroll-mt-20">
+            Vite Setup
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-on-surface-variant">
+            Serve the SDK packages from their real files (instead of esbuild's pre-bundle) so the <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">new URL(...)</code> worker reference inside <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs font-mono">@elah/core</code> resolves correctly:
+          </p>
+          <CodeBlock
+            language="typescript"
+            filename="vite.config.ts"
+            code={`import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  worker: {
+    // @elah/core spawns the MP4 export worker as a module worker. Vite's default
+    // worker format is IIFE, which cannot use \`import\` — the export would crash.
+    format: 'es',
+  },
+  optimizeDeps: {
+    // Serve these from their real files so the \`new URL(...)\` worker reference
+    // survives esbuild's pre-bundle step.
+    exclude: ['@elah/editor', '@elah/core', '@elah/react', '@elah/timeline', 'mediabunny'],
+  },
+})`}
+          />
+          <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+            Both settings are required, and both are about the export worker — omit either and MP4 export fails at runtime.
+          </p>
+        </section>
+
+        {/* Working copies of everything above */}
+        <div className="mb-5 rounded-md border border-outline-variant bg-surface-low p-5">
+          <div className="label-mono mb-1 text-2xs text-on-surface-variant opacity-90">Working code</div>
+          <div className="text-sm font-medium text-on-surface mb-1">Runnable examples</div>
+          <p className="text-xs leading-relaxed text-on-surface-variant mb-3">
+            Every config on this page, applied and verified in three standalone apps that install{' '}
+            <code className="rounded bg-surface-container px-1.5 py-0.5 text-2xs font-mono">@elah/editor</code> from npm — a minimal
+            starter, a full Vite editor, and the same on Next.js.
+          </p>
+          <a href="/examples" className="text-xs font-medium text-primary hover:underline">
+            Browse the examples →
+          </a>
+        </div>
+
+        {/* Next */}
+        <div className="rounded-md border border-outline-variant bg-surface-low p-5">
+          <div className="label-mono mb-1 text-2xs text-on-surface-variant opacity-90">Up Next</div>
+          <div className="text-sm font-medium text-on-surface mb-1">Quick Start</div>
+          <p className="text-xs leading-relaxed text-on-surface-variant mb-3">
+            Build the full editor in under 20 lines — wire your demuxer, mount Preview, and add the Timeline.
+          </p>
+          <a href="/docs/getting-started" className="text-xs font-medium text-primary hover:underline">
+            Continue to Quick Start →
+          </a>
+        </div>
+      </article>
+
+      <DocsToc items={toc} />
+    </div>
+  )
+}

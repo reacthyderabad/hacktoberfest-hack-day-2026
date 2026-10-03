@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Loading sweep for a clip whose media (duration/thumbnail) is still being
+     fetched from a remote source — see ClipBlock's pending-asset placeholder. */
+  @keyframes elah-clip-shimmer-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .elah-clip-shimmer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .elah-clip-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--elah-effect-gloss, rgba(255, 255, 255, 0.16)) 50%,
+      transparent 100%
+    );
+    animation: elah-clip-shimmer-sweep 1.4s ease-in-out infinite;
+  }
+
+  /* An unselected clip lifts on hover. An outline, not a box-shadow: the
+     clip's own boxShadow is written inline from JS, so a shadow would read as
+     a grey halo around the media instead of a lit border. */
+  [data-clip-id]:not([data-selected='true']):hover {
+    outline: 1px solid color-mix(in srgb, var(--elah-text) 28%, transparent);
+    outline-offset: -1px;
+  }
+
+  @media (pointer: coarse) {
+    .elah-trim-handle {
+      width: 28px !important;
+    }
+
+    .elah-playhead-head-hit {
+      left: -11px !important;
+      top: -7px !important;
+      width: 24px !important;
+      height: 24px !important;
+    }
+
+    .elah-playhead-head-visual {
+      left: 4px !important;
+      top: 5px !important;
+    }
+
+    .elah-transition-chip-affordance {
+      opacity: 1 !important;
+    }
+  }
+}

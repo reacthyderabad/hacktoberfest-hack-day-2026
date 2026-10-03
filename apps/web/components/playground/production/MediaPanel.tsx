@@ -1,0 +1,613 @@
+'use client'
+
+/**
+ * MediaPanel — revamped source panel matching the Figma editor reference.
+ *
+ * App-side replacement for the SDK's <SourcePanel>: same MediaLibrary wiring
+ * (import + drag-to-timeline) but a new layout — Import/Record tabs, a prominent
+ * upload dropzone, All/Sort dropdowns, and a 2-column thumbnail grid.
+ *
+ * Kept separate from the published @elah/editor component so the two can be
+ * compared side by side; the old panel is commented out in ProductionEditor and
+ * will be discarded once this is approved.
+ */
+
+import { useCallback, useEffect, useRef, useState, type DragEvent } from 'react'
+import {
+  Plus,
+  Search,
+  ChevronDown,
+  Play,
+  Music,
+  Image as ImageIcon,
+  Trash2,
+  Link2,
+} from 'lucide-react'
+import {
+  useMediaLibrary,
+  useMediaLibraryStore,
+  importFiles,
+  importUrl,
+  MEDIA_DRAG_MIME,
+  mediaDragKindMime,
+  insertMediaAsset,
+  useTimelineEngine,
+  type MediaAsset,
+  type MediaKind,
+  type DragMediaPayload,
+  type InsertAssetResult,
+} from '@elah/editor'
+import { cn } from '@/lib/utils'
+import { isImageFile, needsJpegConversion, toJpegFile } from '@/lib/imageNormalize'
+import { PixabayResults } from './PixabayResults'
+import { PexelsResults } from './PexelsResults'
+import { FreesoundResults } from './FreesoundResults'
+import { ProgressBar } from './ai/ProgressBar'
+import { saveMediaBlob, deleteMediaBlob } from '@/lib/media-file-storage'
+
+export type PanelMode = 'stock' | 'photos' | 'audio'
+
+type MediaSource = 'pixabay' | 'pexels' | 'freesound' | 'uploads'
+
+function fmtDuration(sec: number | undefined): string {
+  if (!sec || !Number.isFinite(sec)) return ''
+  const total = Math.round(sec)
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+function sortByRecent(list: MediaAsset[]): MediaAsset[] {
+  return [...list].sort((a, b) => b.addedAt - a.addedAt)
+}
+
+/** Minimal dropdown — label ▾ with a popover list. */
+function Dropdown({
+  value,
+  options,
+  onChange,
+  align = 'left',
+}: {
+  value: string
+  options: { value: string; label: string }[]
+  onChange: (v: string) => void
+  align?: 'left' | 'right'
+}) {
+  const [open, setOpen] = useState(false)
+  const current = options.find((o) => o.value === value)
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 text-[12px] text-ed-text-muted hover:text-ed-text transition-colors"
+      >
+        {current?.label}
+        <ChevronDown size={13} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div
+            className={cn(
+              'absolute z-20 mt-1 min-w-[140px] rounded-lg border border-ed-border bg-ed-elevated py-1 shadow-xl',
+              align === 'right' ? 'right-0' : 'left-0',
+            )}
+          >
+            {options.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => {
+                  onChange(o.value)
+                  setOpen(false)
+                }}
+                className={cn(
+                  'block w-full px-3 py-1.5 text-left text-[12px] transition-colors',
+                  o.value === value
+                    ? 'text-ed-text bg-ed-bg-2'
+                    : 'text-ed-text-muted hover:text-ed-text hover:bg-ed-bg-2',
+                )}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function AssetCard({
+  asset,
+  active,
+  onActivate,
+}: {
+  asset: MediaAsset
+  active: boolean
+  onActivate: (asset: MediaAsset) => void
+}) {
+  const removeAsset = useMediaLibraryStore((s) => s.removeAsset)
+  const duration = fmtDuration(asset.durationSec)
+
+  const onDragStart = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      const payload: DragMediaPayload = { kind: 'media-asset', assetId: asset.id }
+      e.dataTransfer.setData(MEDIA_DRAG_MIME, JSON.stringify(payload))
+      e.dataTransfer.setData(mediaDragKindMime(asset.kind), '')
+      e.dataTransfer.effectAllowed = 'copy'
+    },
+    [asset.id],
+  )
+  const handleActivate = useCallback(() => onActivate(asset), [asset, onActivate])
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return
+      e.preventDefault()
+      onActivate(asset)
+    },
+    [asset, onActivate],
+  )
+
+  return (
+    <div
+      draggable
+      role="button"
+      tabIndex={0}
+      onDragStart={onDragStart}
+      onClick={handleActivate}
+      onKeyDown={handleKeyDown}
+      title={asset.name}
+      className="group flex flex-col gap-1.5 cursor-grab active:cursor-grabbing"
+    >
+      <div
+        className={cn(
+          'relative aspect-video w-full overflow-hidden rounded-md border bg-ed-bg-2 transition-[border-color,box-shadow]',
+          active
+            ? 'border-[var(--elah-accent)] shadow-[0_0_0_1px_var(--elah-accent)]'
+            : 'border-ed-border',
+        )}
+      >
+        {asset.thumbnailUrl ? (
+          <img
+            src={asset.thumbnailUrl}
+            alt=""
+            draggable={false}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-ed-text-muted">
+            {asset.kind === 'audio' ? (
+              <Music size={20} />
+            ) : asset.kind === 'image' ? (
+              <ImageIcon size={20} />
+            ) : (
+              <Play size={20} />
+            )}
+          </div>
+        )}
+
+        {asset.kind === 'video' && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black/55 text-white">
+              <Play size={13} fill="currentColor" />
+            </span>
+          </div>
+        )}
+
+        {duration && (
+          <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 py-0.5 text-[10px] font-mono text-white">
+            {duration}
+          </span>
+        )}
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            removeAsset(asset.id)
+            void deleteMediaBlob(asset.id)
+          }}
+          title="Remove from library"
+          className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded bg-black/60 text-white/80 opacity-0 transition-opacity hover:text-white group-hover:opacity-100"
+        >
+          <Trash2 size={11} />
+        </button>
+      </div>
+      <span className="truncate text-[11px] text-ed-text">{asset.name}</span>
+    </div>
+  )
+}
+
+interface InsertNotice {
+  message: string
+  tone: 'info' | 'warn'
+}
+
+const PANEL_CONFIG: Record<
+  PanelMode,
+  {
+    title: string
+    accept: string
+    hasUrlImport: boolean
+    hasStockSearch: boolean
+    expectedKind: MediaKind | null
+    emptyLabel: string
+    emptyHint: string
+  }
+> = {
+  stock: {
+    title: 'Videos',
+    accept: 'video/*',
+    hasUrlImport: false,
+    hasStockSearch: true,
+    expectedKind: 'video',
+    emptyLabel: 'No video clips yet',
+    emptyHint: 'Upload a video file',
+  },
+  photos: {
+    title: 'Photos',
+    accept: 'image/*',
+    hasUrlImport: false,
+    hasStockSearch: true,
+    expectedKind: 'image',
+    emptyLabel: 'No images yet',
+    emptyHint: 'Upload image files',
+  },
+  audio: {
+    title: 'Audio',
+    accept: 'audio/*',
+    hasUrlImport: true,
+    hasStockSearch: true,
+    expectedKind: 'audio',
+    emptyLabel: 'No audio yet',
+    emptyHint: 'Upload or add an audio URL',
+  },
+}
+
+const SOURCE_OPTIONS: Record<PanelMode, { value: MediaSource; label: string }[]> = {
+  stock: [
+    { value: 'pixabay', label: 'Pixabay' },
+    { value: 'uploads', label: 'Uploads' },
+  ],
+  photos: [
+    { value: 'pexels', label: 'Pexels' },
+    { value: 'uploads', label: 'Uploads' },
+  ],
+  audio: [
+    { value: 'freesound', label: 'Freesound' },
+    { value: 'uploads', label: 'Uploads' },
+  ],
+}
+
+const PANEL_LABEL: Record<MediaKind, string> = {
+  video: 'Stock',
+  audio: 'Audio',
+  image: 'Photos',
+}
+
+function filterByMode(asset: MediaAsset, mode: PanelMode): boolean {
+  if (mode === 'stock') return asset.kind === 'video'
+  if (mode === 'photos') return asset.kind === 'image'
+  if (mode === 'audio') return asset.kind === 'audio'
+  return true
+}
+
+export function MediaPanel({ style, mode = 'stock' }: { style?: React.CSSProperties; mode?: PanelMode }) {
+  const engine = useTimelineEngine()
+  const { assets } = useMediaLibrary()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [search, setSearch] = useState('')
+  const [dragOver, setDragOver] = useState(false)
+  const [showUrl, setShowUrl] = useState(false)
+  const [url, setUrl] = useState('')
+  const [urlBusy, setUrlBusy] = useState(false)
+  const [urlError, setUrlError] = useState<string | null>(null)
+  const [urlFallback, setUrlFallback] = useState<string | null>(null)
+  const [insertNotice, setInsertNotice] = useState<InsertNotice | null>(null)
+  const [activeAssetId, setActiveAssetId] = useState<string | null>(null)
+  const [converting, setConverting] = useState(0)
+  const [convertError, setConvertError] = useState<string | null>(null)
+
+  const cfg = PANEL_CONFIG[mode]
+  const sourceOptions = SOURCE_OPTIONS[mode]
+  const [source, setSource] = useState<MediaSource>(cfg.hasStockSearch ? sourceOptions[0].value : 'uploads')
+
+  useEffect(() => {
+    if (!insertNotice) return
+    const timer = globalThis.setTimeout(() => {
+      setInsertNotice(null)
+      setActiveAssetId(null)
+    }, 1600)
+    return () => globalThis.clearTimeout(timer)
+  }, [insertNotice])
+
+  const onPick = useCallback(async (files: FileList | File[] | null) => {
+    if (!files || ('length' in files && files.length === 0)) return
+
+    const picked = Array.from(files)
+    // `isImageFile` rather than a MIME check: the Android HEIC this exists for
+    // arrives with an empty `type`, which is also how video/audio would look —
+    // so the extension is the only thing that distinguishes them.
+    const toConvert = picked.filter((f) => isImageFile(f) && needsJpegConversion(f))
+    if (toConvert.length === 0) {
+      const result = await importFiles(picked)
+      for (const asset of result.imported) {
+        const file = picked.find(
+          (f) => f.name === asset.name && f.size === asset.byteSize && f.lastModified === asset.lastModified,
+        )
+        if (file) void saveMediaBlob(asset.id, file, { name: file.name, type: file.type })
+      }
+      return
+    }
+
+    setConvertError(null)
+    setConverting(toConvert.length)
+    const failed: string[] = []
+    try {
+      const prepared = await Promise.all(
+        picked.map(async (file) => {
+          if (!toConvert.includes(file)) return file
+          try {
+            return await toJpegFile(file)
+          } catch {
+            failed.push(file.name)
+            return null
+          }
+        }),
+      )
+      const validFiles = prepared.filter((f): f is File => f !== null)
+      const result = await importFiles(validFiles)
+      for (const asset of result.imported) {
+        const file = validFiles.find(
+          (f) => f.name === asset.name && f.size === asset.byteSize && f.lastModified === asset.lastModified,
+        )
+        if (file) void saveMediaBlob(asset.id, file, { name: file.name, type: file.type })
+      }
+    } finally {
+      setConverting(0)
+    }
+
+    if (failed.length > 0) {
+      setConvertError(`Could not read ${failed.join(', ')} — try a JPEG or PNG.`)
+    }
+  }, [])
+
+  const onAddUrl = useCallback(async () => {
+    const trimmed = url.trim()
+    if (!trimmed || urlBusy) return
+    setUrlBusy(true)
+    setUrlError(null)
+    setUrlFallback(null)
+    try {
+      const result = await importUrl(trimmed)
+      setUrl('')
+      setShowUrl(false)
+      if (cfg.expectedKind && result.kind !== cfg.expectedKind) {
+        setUrlFallback(`Imported as ${result.kind} — find it in the ${PANEL_LABEL[result.kind]} panel.`)
+      }
+    } catch {
+      setUrlError('Could not import that URL.')
+    } finally {
+      setUrlBusy(false)
+    }
+  }, [url, urlBusy, cfg.expectedKind])
+
+  const onActivateAsset = useCallback(
+    async (asset: MediaAsset) => {
+      const result = await insertMediaAsset(engine, asset.id)
+      showInsertNotice(asset, result, setInsertNotice)
+      if (result.ok) setActiveAssetId(asset.id)
+    },
+    [engine],
+  )
+
+  const onDrop = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      setDragOver(false)
+      if (e.dataTransfer.files?.length) onPick(e.dataTransfer.files)
+    },
+    [onPick],
+  )
+
+  const showUploads = source === 'uploads' || !cfg.hasStockSearch
+  const filtered = sortByRecent(
+    assets.filter((a) => {
+      if (!filterByMode(a, mode)) return false
+      if (search && !a.name.toLowerCase().includes(search.toLowerCase())) return false
+      return true
+    }),
+  )
+
+  return (
+    <div className="flex h-full flex-col bg-ed-panel text-ed-text" style={style}>
+      {/* Header — panel title + upload action */}
+      <div className="flex items-center justify-between border-b border-ed-border px-3.5 py-2.5">
+        <span className="text-[13px] font-semibold text-ed-text">{cfg.title}</span>
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-medium text-white transition-opacity hover:opacity-90"
+          style={{ background: 'var(--elah-accent)' }}
+        >
+          <Plus size={12} />
+          Upload
+        </button>
+      </div>
+
+      <div className="flex flex-1 flex-col overflow-hidden p-3.5">
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept={cfg.accept}
+          className="hidden"
+          onChange={(e) => onPick(e.target.files)}
+        />
+
+        {/* Search + source selector */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ed-text-muted" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={`Search ${cfg.title.toLowerCase()}…`}
+              className="w-full rounded-md border border-ed-border bg-ed-bg-2 py-1.5 pl-7 pr-2.5 text-[12px] text-ed-text placeholder:text-ed-text-muted focus:border-[var(--elah-accent)] focus:outline-none"
+            />
+          </div>
+          {cfg.hasStockSearch && (
+            <Dropdown
+              value={source}
+              options={sourceOptions}
+              onChange={(v) => setSource(v as MediaSource)}
+              align="right"
+            />
+          )}
+        </div>
+
+        {/* Add from URL — only for panels that support it (no stock search alternative) */}
+        {cfg.hasUrlImport && (
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                setShowUrl((s) => !s)
+                setUrlFallback(null)
+              }}
+              className="mt-2 inline-flex items-center gap-1.5 self-start text-[11px] text-ed-text-muted hover:text-ed-text transition-colors"
+            >
+              <Link2 size={12} />
+              Add from URL
+            </button>
+            {showUrl && (
+              <div className="mt-1.5 flex gap-1.5">
+                <input
+                  autoFocus
+                  value={url}
+                  onChange={(e) => {
+                    setUrl(e.target.value)
+                    setUrlError(null)
+                  }}
+                  onKeyDown={(e) => e.key === 'Enter' && onAddUrl()}
+                  placeholder="https://…/clip.mp3"
+                  className="min-w-0 flex-1 rounded-md border border-ed-border bg-ed-bg-2 px-2.5 py-1.5 text-[12px] text-ed-text placeholder:text-ed-text-muted focus:border-[var(--elah-accent)] focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={onAddUrl}
+                  disabled={urlBusy || !url.trim()}
+                  className="shrink-0 rounded-md px-2.5 py-1.5 text-[12px] font-medium text-white disabled:opacity-50"
+                  style={{ background: 'var(--elah-accent)' }}
+                >
+                  {urlBusy ? '…' : 'Add'}
+                </button>
+              </div>
+            )}
+            {urlError && <span className="mt-1 text-[11px] text-ed-error">{urlError}</span>}
+            {urlFallback && <span className="mt-1 text-[11px] text-ed-text-muted">{urlFallback}</span>}
+          </>
+        )}
+
+        {converting > 0 && (
+          <div role="status" className="mt-2 rounded-md border border-ed-border bg-ed-elevated px-2.5 py-1.5">
+            <ProgressBar
+              indeterminate
+              label={`Converting ${converting} ${converting === 1 ? 'image' : 'images'}…`}
+            />
+          </div>
+        )}
+
+        {convertError && (
+          <div
+            role="alert"
+            className="mt-2 rounded-md border border-ed-error/40 bg-ed-error/10 px-2.5 py-1.5 text-[12px] text-ed-error"
+          >
+            {convertError}
+          </div>
+        )}
+
+        {insertNotice && (
+          <div
+            role="status"
+            className={cn(
+              'mt-2 rounded-md border px-2.5 py-1.5 text-[11px]',
+              insertNotice.tone === 'warn'
+                ? 'border-ed-error/40 bg-ed-error/10 text-ed-error'
+                : 'border-ed-border bg-ed-elevated text-ed-text',
+            )}
+          >
+            {insertNotice.message}
+          </div>
+        )}
+
+        <div
+          className={cn(
+            'mt-3 flex-1 overflow-y-auto rounded-lg transition-colors',
+            dragOver && 'outline outline-2 outline-dashed outline-[var(--elah-accent)]',
+          )}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragOver(true)
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={onDrop}
+        >
+          {!showUploads ? (
+            mode === 'audio' ? (
+              <FreesoundResults query={search} onActivate={onActivateAsset} />
+            ) : source === 'pexels' ? (
+              <PexelsResults query={search} />
+            ) : (
+              <PixabayResults
+                key={mode === 'stock' ? 'videos' : 'photos'}
+                kind={mode === 'stock' ? 'videos' : 'photos'}
+                query={search}
+              />
+            )
+          ) : filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-1 py-6 text-center text-ed-text-muted">
+              <span className="text-[12px]">{search ? 'No matches' : cfg.emptyLabel}</span>
+              {!search && <span className="text-[11px]">{cfg.emptyHint}</span>}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2.5">
+              {filtered.map((a) => (
+                <AssetCard
+                  key={a.id}
+                  asset={a}
+                  active={activeAssetId === a.id}
+                  onActivate={onActivateAsset}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function showInsertNotice(
+  asset: MediaAsset,
+  result: InsertAssetResult,
+  setInsertNotice: (notice: InsertNotice) => void,
+) {
+  if (result.ok) {
+    setInsertNotice({ message: `Added ${asset.name}`, tone: 'info' })
+    return
+  }
+
+  if (result.reason === 'cancelled') return
+
+  if (result.reason === 'missing-asset') {
+    setInsertNotice({ message: 'Asset unavailable', tone: 'warn' })
+    return
+  }
+
+  setInsertNotice({ message: `No unlocked track for ${asset.kind}`, tone: 'warn' })
+}
+
+export default MediaPanel
