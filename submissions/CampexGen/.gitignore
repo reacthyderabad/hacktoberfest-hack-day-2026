@@ -1,0 +1,7 @@
+node_modules/
+dist/
+work/
+.env
+*.mp4
+demo/bg.png
+demo/test.mp4

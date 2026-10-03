@@ -1,0 +1,35 @@
+{
+  "name": "campexgen",
+  "version": "0.1.0",
+  "description": "Telegram bot: campaign text → MP4 promo video via Gemma 4 + ELAH",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "start": "node --experimental-vm-modules dist/bot.js",
+    "dev": "tsx src/bot.ts",
+    "check": "tsx src/check.ts"
+  },
+  "dependencies": {
+    "@elah/cli": "^0.1.2",
+    "@remotion/bundler": "4.0.290",
+    "@remotion/renderer": "4.0.290",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.3",
+    "grammy": "^1.27.0",
+    "openai": "^4.67.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.290",
+    "sharp": "^0.33.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.27",
+    "@types/node": "^22.0.0",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

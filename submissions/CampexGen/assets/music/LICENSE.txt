@@ -1,0 +1,15 @@
+Music assets in this directory are royalty-free.
+
+File: loop.mp3
+Source: "Inspiring Corporate" by Scott Holmes
+URL: https://freemusicarchive.org/music/Scott_Holmes/
+License: Creative Commons Attribution-NonCommercial (CC BY-NC 4.0)
+         https://creativecommons.org/licenses/by-nc/4.0/
+
+Usage: Background music in generated promo videos. Attribution provided here per license terms.
+Commercial use: Replace this file with a CC0 or commercially licensed track before
+                deploying this bot for commercial campaigns.
+
+Placeholder note: The file loop.mp3 must be downloaded and placed here before running the bot.
+Run: curl -L "https://freemusicarchive.org/..." -o assets/music/loop.mp3
+Or supply any MP3 >= 30 seconds and rename it loop.mp3.
