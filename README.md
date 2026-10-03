@@ -1,55 +1,259 @@
-# React Hyderabad × MLH Hack Day 2026
+# ContribReady
 
-Welcome to the preparation and project submission hub for **Hacktoberfest Hack Day 2026 by React Hyderabad**.
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" />
+  <img src="https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white" alt="Node.js 20+" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" />
+  <img src="https://img.shields.io/badge/AI-Open%20Weight-8A2BE2" alt="Open-weight AI" />
+</p>
 
-**Hacktoberfest Hack Day • Hyderabad | MLH × DEV × React Hyderabad**
+> From GitHub Issue to Contribution-Ready.
 
-Build a focused project, demonstrate a working workflow, and share what you learned. Keep your project code in your own public GitHub repository; submit its details here through a pull request.
+ContribReady is an AI-powered open-source readiness platform that helps developers understand a GitHub issue, find the most relevant files, learn the required concepts, and evaluate whether they are prepared to contribute confidently before opening a pull request.
 
-## Start here
+Whether you are a student, beginner contributor, or experienced developer exploring a new codebase, ContribReady turns a vague GitHub issue into a structured preparation workflow.
 
-1. Read [Pre-Event Prep](PRE-EVENT-PREP.md) and the [Hack Day Crash Course](HACK-DAY-CRASH-COURSE.md). Complete the preparation before attending.
-2. Review the [three planned challenges](PROBLEM_STATEMENTS.md) and choose your project direction.
-3. Prepare your tools and sample inputs. Build your submission during the event, following the organizers' rules.
-4. Copy [the submission template](SUBMISSION_TEMPLATE.md) into `submissions/` in your fork and open a pull request.
+---
 
-## Three planned challenges
+## Why this project exists
 
-| Challenge | What to build | Brief |
+Many contributors struggle not because they lack motivation, but because they do not know:
+
+- what the issue is actually asking for
+- which files in a large repo matter most
+- which concepts are required before making a meaningful contribution
+- whether they are ready to begin implementing a fix
+
+ContribReady bridges that gap by combining:
+- GitHub issue and repository context extraction
+- intelligent file relevance scoring
+- concept-driven learning
+- guided readiness checks
+- contributor-focused launch guidance
+
+---
+
+## Key features
+
+- GitHub issue URL analysis
+- Automatic repository context gathering
+- Relevant file prioritization and snippets
+- Issue understanding in plain English
+- Concept cards and prerequisite guidance
+- Step-by-step contribution readiness roadmap
+- AI-generated readiness quiz
+- Contributor support assistant grounded in repo code
+- Open-weight AI integration with local or cloud providers
+- Demo-safe benchmark mode for hackathons and live presentations
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A[GitHub Issue URL] --> B[Context Engine]
+    B --> C[Tree pruning and filtering]
+    C --> D[Relevant file scoring]
+    D --> E[Context trimming and snippets]
+    E --> F[Open-weight AI layer]
+    F --> G[Issue understanding]
+    F --> H[Relevant files and previews]
+    F --> I[Required concepts]
+    F --> J[Preparation roadmap]
+    F --> K[Readiness quiz]
+    K --> L[Evaluation engine]
+    L --> M{Ready to contribute?}
+    M -- Yes --> N[Launchpad and GitHub issue link]
+    M -- No --> O[Gap remediation and retry]
+```
+
+---
+
+## Tech stack
+
+| Layer | Stack |
+| --- | --- |
+| Frontend | React 19, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| AI Integration | Google Gemini, Groq, OpenRouter, Ollama, demo mode |
+| Data Sources | GitHub REST API, repository tree analysis |
+| UI Utilities | Lucide Icons, Canvas Confetti |
+
+---
+
+## Repository structure
+
+```text
+.
+├── backend/              # Express backend
+├── frontend/             # React + Vite frontend
+├── challenges/           # Hackathon challenge docs
+├── docs/                 # Submission and project documentation
+├── submissions/          # Project submission templates/files
+├── .env.example          # Example environment configuration
+├── .gitignore
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── EVENT_README.md
+├── HACK-DAY-CRASH-COURSE.md
+├── LICENSE
+├── PRE-EVENT-PREP.md
+├── PROBLEM_STATEMENTS.md
+├── README.md
+├── render.yaml
+├── SECURITY.md
+├── SUBMISSION_TEMPLATE.md
+├── package.json
+└── ...
+```
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20 or newer
+- npm
+- Optional: GitHub token
+- Optional: Gemini / Groq / OpenRouter / Ollama credentials
+
+### 1) Clone the repository
+
+```bash
+git clone https://github.com/ysathyasai/hacktoberfest-hack-day-2026.git
+cd hacktoberfest-hack-day-2026
+```
+
+### 2) Install dependencies
+
+```bash
+npm run install:all
+```
+
+This installs dependencies for both the backend and frontend.
+
+### 3) Configure environment variables
+
+Copy the environment template:
+
+```bash
+cp .env.example backend/.env
+```
+
+Update the values as needed.
+
+### 4) Run the app
+
+#### Development mode
+
+```bash
+npm run dev:backend
+npm run dev:frontend
+```
+
+The backend runs on:
+
+- `http://localhost:3001`
+
+The frontend runs on:
+
+- `http://localhost:5173`
+
+#### Production-style build
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## Environment variables
+
+| Variable | Description | Default |
 | --- | --- | --- |
-| Best Open-Source AI Project | A useful workflow powered by open-source or open-weight AI, an agent skill, or an original/meaningfully modified model harness | [Requirements and demo checklist](challenges/open-source-ai.md) |
-| Best Use of Gemma 4 | A focused experience using Gemma 4 through the Gemini API, with multimodal input where it adds value | [Requirements and demo checklist](challenges/gemma-4.md) |
-| Build on elah | A browser-based AI editing workflow with validated plans, preview, keep/discard/refine, and one-step reversal | [Requirements and idea directions](challenges/elah.md) |
+| `PORT` | Backend port | `3001` |
+| `GITHUB_TOKEN` | GitHub token for increased API capacity | optional |
+| `AI_PROVIDER` | Model provider (`gemini`, `groq`, `openrouter`, `ollama`, `demo`) | `gemini` |
+| `AI_MODEL` | Model name / identifier | `gemma-4-31b-it` |
+| `GEMINI_API_KEY` | API key for Gemini-based models | optional |
+| `OLLAMA_HOST` | Local Ollama endpoint | `http://localhost:11434` |
 
-All three final briefs use a **two-hour (120-minute) build plan**. The elah examples are optional idea directions; you may build your own workflow that meets its requirements. Follow the build window and deadline announced by the organizers.
+---
 
-See the [MLH event challenges page](https://www.mlh.com/events/react-hyderabad-hack-day/challenges) for event updates. The supplied briefs are available alongside each challenge. Partner technologies mentioned in the learning guides are optional learning resources; they do not add categories to the three challenges listed here.
+## Available scripts
 
-## Submit your project
+From the root `package.json`:
 
-Read the [step-by-step submission guide (PDF)](docs/submission-guide.pdf) before submitting. Commit only your completed submission Markdown file here; your project code stays in your own public repository.
+```bash
+npm run install:all   # install frontend + backend deps
+npm run build         # build frontend
+npm run start         # start backend
+npm run dev:backend   # run backend in watch mode
+npm run dev:frontend  # run frontend in live dev mode
+```
 
-1. Fork this repository.
-2. Build in your own public project repository.
-3. Create a branch in your fork, such as `submission/my-project`.
-4. Copy `SUBMISSION_TEMPLATE.md` to `submissions/project-name_team-or-attendee-name.md`.
-5. Complete the project details, challenge evidence, repository link, and demo instructions.
-6. Open a PR targeting this repository’s `main` branch, titled `Submission: Project Name - Team or Attendee Name`.
+---
 
-Follow [CONTRIBUTING.md](CONTRIBUTING.md) for the full process. A PR records your project for community review; it does not replace any submission required on MLH's platform. Follow the organizers' submission and eligibility instructions. PR merging is handled by maintainers.
+## Demo workflow
 
-## Before arriving
+A typical live demo flow:
 
-- [ ] Laptop and charger
-- [ ] Git, GitHub account, and code editor
-- [ ] Node.js or Python and the tools needed for your chosen challenge
-- [ ] Prep guide and crash course completed
-- [ ] A small project idea and a sample input
+1. Open the app in the browser
+2. Paste a public GitHub issue URL
+3. Allow the app to fetch repository context
+4. Review relevant files, snippets, and issue summary
+5. Explore required concepts and mini-lessons
+6. Answer the repository-specific readiness quiz
+7. Review the AI assessment and launchpad recommendations
 
-Learning, installing tools, and testing small examples before the event are encouraged. Do not build your Hack Day submission before the event.
+This workflow helps developers understand whether they are actually ready to start contributing.
 
-## Community
+---
 
-Be welcoming, credit your sources, and share progress honestly. Read the [Code of Conduct](CODE_OF_CONDUCT.md) and [security guidance](SECURITY.md).
+## Contributing
 
-Organized by **React Hyderabad**.
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run validation/build checks
+5. Submit a pull request
+
+For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Code of conduct
+
+Please review our community expectations in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+---
+
+## Security
+
+If you discover a security vulnerability, please report it responsibly via the project’s security process. See [SECURITY.md](SECURITY.md).
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Project status
+
+This repository combines a working app prototype with event and submission materials for the Hacktoberfest Hack Day 2026 context. The core product is the ContribReady platform and the project is designed to be extensible for further development, demoing, and community contributions.
+
+---
+
+## Acknowledgements
+
+- Open-weight AI models
+- GitHub API ecosystem
+- React and Vite communities
+- Hacktoberfest and MLH community initiatives

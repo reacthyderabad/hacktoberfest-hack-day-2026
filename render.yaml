@@ -1,0 +1,19 @@
+﻿services:
+  - type: web
+    name: contribready
+    env: node
+    plan: free
+    region: singapore
+    buildCommand: npm run install:all && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: AI_PROVIDER
+        value: gemini
+      - key: AI_MODEL
+        value: gemma-4-31b-it
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
