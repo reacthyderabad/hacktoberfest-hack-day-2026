@@ -63,6 +63,6 @@ Open http://localhost:3000. In Air Trace, draw a simple object outline, stop the
 - [x] Project repository is public and links work.
 - [x] Required challenge evidence is included.
 - [x] Project uses an open-source license where required by the challenge.
-- [ ] Work and reused materials are represented honestly.
+- [x] Work and reused materials are represented honestly.
 - [x] No API keys, tokens, passwords, or private data are included.
-- [ ] I followed the organizers' build window and submission instructions.
+- [x] I followed the organizers' build window and submission instructions.
