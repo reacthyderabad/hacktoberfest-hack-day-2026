@@ -1,10 +1,10 @@
-# ContribReady — From GitHub Issue to Contribution-Ready
+﻿# ContribReady — From GitHub Issue to Contribution-Ready
 
 ## Team / attendee
 
-- Team name: Team ContribReady
-- Members and GitHub usernames: ContribReady Team (`@kondl`)
-- Profile links: https://github.com/kondl
+- Team name (if applicable): Team ContribReady
+- Members and GitHub usernames: @ysathyasai
+- Profile links (optional): https://github.com/ysathyasai
 
 ## Challenge
 
@@ -12,11 +12,15 @@ Select the challenge you are entering:
 
 - [x] Best Open-Source AI Project
 - [x] Best Use of Gemma 4
+- [ ] Build on elah
+
+If listing multiple categories, confirm eligibility with the organizers and complete evidence for each.
 
 ## Project links
 
-- Public GitHub repository: https://github.com/kondl/contribready
-- Open-source license (link to the license file): [LICENSE](../LICENSE) (MIT License)
+- Public GitHub repository: https://github.com/ysathyasai/ContribReady
+- Open-source license (link to the license file): https://github.com/ysathyasai/ContribReady/blob/main/LICENSE (MIT License)
+- Live Deployment: https://contribready.onrender.com
 
 ## Problem and solution
 
@@ -49,7 +53,8 @@ ContribReady bridges the critical gap between **"I found a GitHub issue"** and *
 - **Backend:** Node.js, Express, Axios.
 - **Repository Context Engine:** Heuristic keyword matching between issue descriptions and recursive Git tree blobs, intelligent noise filtering, and token-safe content truncation.
 - **Open-Weight AI Layer:** Pluggable AI architecture supporting open-weight models:
-  - **Llama 3.3 70B & Gemma 2 9B** via Groq / OpenRouter / Gemini API
+  - **Google Gemma 4 (`gemma-4-31b-it`) & Gemma 2** via Google Generative Language / Gemini API
+  - **Llama 3.3 70B** via Groq / OpenRouter
   - **Ollama** for 100% offline, local open-weight model execution
   - **Verified benchmark synthesis engine** for bulletproof hackathon demo reliability
 
@@ -58,19 +63,24 @@ ContribReady bridges the critical gap between **"I found a GitHub issue"** and *
 ### Best Open-Source AI Project
 
 - **Open-source/open-weight AI component and its role:**
-  Open-weight AI (Gemma 2 / Llama 3.3) serves as the central reasoning engine of the platform. Rather than a superficial chatbot, the AI performs the core repo analysis: diagnosing the issue, connecting it to repository code modules, defining required technical concepts, and generating repository-specific readiness tests.
+  Open-weight AI (Gemma 4 / Gemma 2 / Llama 3.3) serves as the central reasoning engine of the platform. Rather than a superficial chatbot, the AI performs the core repo analysis: diagnosing the issue, connecting it to repository code modules, defining required technical concepts, and generating repository-specific readiness tests.
 - **Code link showing the integration:**
-  - AI Service layer: [`backend/services/ai/aiService.js`](../backend/services/ai/aiService.js)
-  - GitHub Context Engine: [`backend/services/github.js`](../backend/services/github.js)
-  - Quiz Evaluation Engine: [`backend/services/quizService.js`](../backend/services/quizService.js)
+  - AI Service layer: https://github.com/ysathyasai/ContribReady/blob/main/backend/services/ai/aiService.js
+  - GitHub Context Engine: https://github.com/ysathyasai/ContribReady/blob/main/backend/services/github.js
+  - Quiz Evaluation Engine: https://github.com/ysathyasai/ContribReady/blob/main/backend/services/quizService.js
+- **Agent Skill Open Standard compliance (if applicable):**
+  N/A
+- **Original harness implementation or meaningful changes (if applicable):**
+  Custom multi-model orchestration harness implementing dynamic fallback chaining across Google AI (Gemma 4), Groq, OpenRouter, and Ollama with JSON schema repair, resilient retry handling, and deterministic repository AST synthesis fallback.
 
 ### Best Use of Gemma 4
 
-- **Gemma model identifier and Gemini API integration:**
-  Integrated directly with Google's open-weight Gemma 4 model `gemma-4-31b-it` through the Google Generative Language / Gemini API (`v1beta/models/gemma-4-31b-it:generateContent`) via environment variables `AI_PROVIDER=gemini`, `AI_MODEL=gemma-4-31b-it`, and `GEMINI_API_KEY`:
-  [`backend/services/ai/aiService.js`](../backend/services/ai/aiService.js) (`callGeminiModel`)
-- **Input and useful output:**
-  Takes GitHub Issue metadata + extracted repository code AST snippets and produces structured JSON containing issue understanding, file relevance, concept learning paths, and interactive readiness assessments.
+- **Gemma 4 model identifier and Gemini API integration:**
+  Integrated directly with Google's open-weight Gemma 4 model `gemma-4-31b-it` through the Google Generative Language / Gemini API (`v1beta/models/gemma-4-31b-it:generateContent`) via environment variables `AI_PROVIDER=gemini`, `AI_MODEL=gemma-4-31b-it`, and `GEMINI_API_KEY`.
+- **Code link showing the integration:**
+  https://github.com/ysathyasai/ContribReady/blob/main/backend/services/ai/aiService.js#L201-L280 (`callGeminiModel`)
+- **Input and useful output; multimodal value where applicable:**
+  Takes structured GitHub Issue metadata + extracted repository code AST snippets and produces structured JSON containing issue understanding, file relevance, concept learning paths, and interactive readiness assessments.
 
 ## Current status
 
@@ -85,6 +95,7 @@ ContribReady bridges the critical gap between **"I found a GitHub issue"** and *
   - Actionable Contribution Launchpad with maintainer checklist and GitHub issue link
   - Interactive "Ask About This Issue" context-grounded AI chat assistant
   - 1-click safe demo mode with verified benchmark open-source issues
+  - Fully deployed and live on Render: https://contribready.onrender.com
 - **Known limitations / incomplete features:**
   - Very large files (>6,000 chars) are partially truncated to fit within model context windows.
 - **What you would improve next:**
@@ -95,7 +106,7 @@ ContribReady bridges the critical gap between **"I found a GitHub issue"** and *
 
 - [x] Project repository is public and links work.
 - [x] Required challenge evidence is included.
-- [x] Project uses an open-source license (MIT License).
+- [x] Project uses an open-source license where required by the challenge.
 - [x] Work and reused materials are represented honestly.
 - [x] No API keys, tokens, passwords, or private data are included.
 - [x] I followed the organizers' build window and submission instructions.
