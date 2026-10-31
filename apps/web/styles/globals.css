@@ -1,0 +1,822 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Visible keyboard focus for all interactive elements (a11y: WCAG 2.4.7). */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* ── Light theme (Precision Studio — warm neutral foundation) ─────────── */
+  :root {
+    --font-geist-sans: 'Geist', system-ui, sans-serif;
+    --font-geist-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+    --font-inter: 'Inter', system-ui, sans-serif;
+
+    /* Surface hierarchy — tonal layers, lightest at top */
+    --color-surface:             #fcf9f8;
+    --color-surface-dim:         #dcd9d9;
+    --color-surface-bright:      #fcf9f8;
+    --color-surface-lowest:      #ffffff;
+    --color-surface-low:         #f6f3f2;
+    --color-surface-container:   #f0eded;
+    --color-surface-high:        #eae7e7;
+    --color-surface-highest:     #e5e2e1;
+
+    /* Text */
+    --color-on-surface:          #1c1b1b;
+    --color-on-surface-variant:  #5b403f;
+    --color-inverse-surface:     #313030;
+    --color-inverse-on-surface:  #f3f0ef;
+
+    /* Borders */
+    --color-outline:             #8f6f6e;
+    --color-outline-variant:     #e4bebc;
+    --color-outline-subtle:      #efd9d8; /* softer hairline than outline-variant */
+    --color-focus-ring:          var(--color-outline); /* WCAG 1.4.11: >= 3:1 */
+
+    /* Accent — Elah blue (unified with the editor/playground accent #00c2ff;
+       light theme uses a darker cyan so white text on the fill clears WCAG AA) */
+    --color-primary:             #0086c9;
+    --color-primary-hover:       #0072ad;
+    --color-primary-dim:         #0086c9; /* same as primary in light */
+    --color-on-primary:          #ffffff; /* foreground on a primary fill */
+
+    /* Supporting */
+    --color-secondary:           #485f84;
+    --color-tertiary:            #006860;
+  }
+
+  /* ── Dark theme (Precision Studio — the editor's cool near-black) ──────
+     The site wears the editor's palette (packages/editor/src/styles/tokens.css,
+     the --elah-* namespace) so chrome and the embedded editor share one scale:
+     no seam on /playground/*, no warm-to-cool flip between / and /docs.
+     The landing tokens (.landing-root) alias this block; change colours here. */
+  .dark {
+    /* Surface hierarchy — tonal lift via cool near-black steps */
+    --color-surface:             #06070a; /* main background (--elah-bg) */
+    --color-surface-dim:         #06070a;
+    --color-surface-bright:      #232938; /* --elah-border step */
+    --color-surface-lowest:      #040508; /* deepest — nav underlay, card-base */
+    --color-surface-low:         #0a0d14; /* panels, sidebars (--elah-bg-secondary) */
+    --color-surface-container:   #0d1017; /* cards, sections (--elah-bg-card) */
+    --color-surface-high:        #171d2b; /* modals, elevated menus (--elah-bg-elevated) */
+    --color-surface-highest:     #1e2433; /* chips, scrollbar thumb */
+
+    /* Text */
+    --color-on-surface:          #f3f4f6; /* cool off-white (--elah-text) */
+    --color-on-surface-variant:  #9ca3af; /* cool mid-gray (--elah-text-muted) */
+    --color-inverse-surface:     #f3f4f6;
+    --color-inverse-on-surface:  #0d1017;
+
+    /* Borders */
+    --color-outline:             #2d3548; /* interactive edges (--elah-outline) */
+    --color-outline-variant:     #232938; /* structural hairlines (--elah-border) */
+    --color-outline-subtle:      #1a1f2b; /* quietest hairline (--elah-border-subtle) */
+    /* --color-outline is 1.6:1 on the page: right for a border, too faint for a
+       focus ring (WCAG 1.4.11 needs 3:1), so the ring takes the accent. */
+    --color-focus-ring:          var(--color-primary);
+
+    /* Accent — Elah blue (the editor's cyan #00c2ff; bright fill takes dark
+       text, matching the editor's --elah-accent-text) */
+    --color-primary:             #00c2ff;
+    --color-primary-hover:       #2bcbff;
+    --color-primary-dim:         #7adcff; /* soft glow for highlights */
+    --color-on-primary:          #06212b; /* dark ink on the bright cyan fill */
+
+    /* Supporting */
+    --color-secondary:           #a7afbf; /* cool neutral, a step above on-surface-variant */
+    --color-tertiary:            #6ab0d0; /* already cool: hue 197deg vs accent 195deg */
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-inter);
+    line-height: 1.6;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  ::selection {
+    background-color: rgba(0, 134, 201, 0.18);
+    color: var(--color-on-surface);
+  }
+
+  .dark ::selection {
+    background-color: rgba(0, 194, 255, 0.28);
+  }
+
+  /* Editor surface uses its own accent for selection, not the site's brand red. */
+  .elah-root ::selection {
+    background-color: var(--elah-accent-glow);
+    color: var(--elah-text);
+  }
+  .elah-root ::-moz-selection {
+    background-color: var(--elah-accent-glow);
+    color: var(--elah-text);
+  }
+}
+
+@layer components {
+  .label-mono {
+    font-family: var(--font-geist-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .prose-doc {
+    font-family: var(--font-inter);
+  }
+
+  .prose-doc h1,
+  .prose-doc h2,
+  .prose-doc h3,
+  .prose-doc h4 {
+    font-family: var(--font-geist-sans);
+  }
+
+  .card-base {
+    background: var(--color-surface-lowest);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 6px;
+  }
+
+  .card-base-muted {
+    background: var(--color-surface-low);
+    border: 1px solid var(--color-surface-highest);
+    border-radius: 6px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-geist-sans);
+    transition: background-color 0.15s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: var(--color-on-surface);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-geist-sans);
+    transition: background-color 0.15s ease;
+    border: 1px solid var(--color-outline-variant);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--color-surface-container);
+  }
+}
+
+/* ── @elah/editor token bridge ───────────────────────────────────────────────
+   Maps --elah-* editor tokens onto the app's --color-* design system so the
+   editor inherits light/dark mode automatically via CSS variable inheritance.
+   Clip colours and typography remain hard-coded (editor-domain semantics).   */
+
+:root,
+.elah-root {
+  /* The editor uses a fixed cool blue-gray scheme, which the site's own dark
+     --color-* scale now matches (it is a dark tool surface in both modes). Re-theme by
+     overriding any of these --elah-* variables. */
+
+  /* Surfaces */
+  --elah-bg:            #06070a;
+  --elah-bg-secondary:  #0a0d14;
+  --elah-bg-panel:      #121722;
+  --elah-bg-card:       #0d1017;
+  --elah-bg-elevated:   #171d2b;
+  --elah-bg-highest:    #1e2433;
+
+  /* Borders */
+  --elah-border:        #232938;
+  --elah-border-subtle: #1a1f2b;
+  --elah-outline:       #2d3548;
+
+  /* Text */
+  --elah-text:          #f3f4f6;
+  --elah-text-muted:    #9ca3af;
+
+  /* Accent — cyan (Figma Export button #00c2ff; dark text on the fill) */
+  --elah-accent:        #00c2ff;
+  --elah-accent-hover:  #2bcbff;
+  --elah-accent-dim:    #7adcff;
+  --elah-accent-glow:   rgba(0, 194, 255, 0.35);
+  --elah-accent-soft:   rgba(0, 194, 255, 0.12);
+  --elah-accent-text:   #06212b;
+
+  /* Semantic */
+  --elah-color-error:   #f87171;
+
+  /* Timeline (Figma: white playhead, cool-gray ticks) */
+  --elah-playhead:      #ffffff;
+  --elah-tick-color:    #394146;
+  --elah-tick-label:    #7a858b;
+
+  /* Typography */
+  --elah-font-ui:   var(--font-geist-sans, system-ui, sans-serif);
+  --elah-font-mono: var(--font-geist-mono, ui-monospace, monospace);
+
+  /* Geometry */
+  --elah-radius-sm: 6px;
+  --elah-radius-md: 8px;
+
+  /* Kind tag colours — pale tones on the dark editor surface */
+  --elah-tag-video-fg:  #93c5fd;
+  --elah-tag-video-bg:  rgba(37, 99, 235, 0.2);
+  --elah-tag-audio-fg:  #86efac;
+  --elah-tag-audio-bg:  rgba(22, 163, 74, 0.2);
+  --elah-tag-image-fg:  #fcd34d;
+  --elah-tag-image-bg:  rgba(245, 158, 11, 0.2);
+
+  /* Element type colours (Figma text clips are orange/rust) */
+  --elah-tag-text-fg:     #f0b483;
+  --elah-tag-text-bg:     rgba(173, 86, 33, 0.25);
+  --elah-tag-text-border: rgba(173, 86, 33, 0.4);
+
+  /* Clip colours are editor-domain and don't vary by light/dark */
+  --elah-clip-video-top:    #3b82f6;
+  --elah-clip-video-mid:    #2563eb;
+  --elah-clip-video-bottom: #1d4ed8;
+  --elah-clip-video-accent: #60a5fa;
+
+  --elah-clip-audio-top:    #1c8160;
+  --elah-clip-audio-mid:    #115843;
+  --elah-clip-audio-bottom: #0c2a26; /* exact body */
+  --elah-clip-audio-accent: #0d4d3c; /* exact border */
+
+  --elah-clip-text-top:    #ad5621;
+  --elah-clip-text-mid:    #8f3f18;
+  --elah-clip-text-bottom: #7a2e10; /* exact body */
+  --elah-clip-text-accent: #ad5621; /* exact border */
+
+  --elah-clip-image-top:    #fbbf24;
+  --elah-clip-image-mid:    #d97706;
+  --elah-clip-image-bottom: #b45309;
+  --elah-clip-image-accent: #fcd34d;
+
+  --elah-clip-shape-top:    #818cf8;
+  --elah-clip-shape-mid:    #6366f1;
+  --elah-clip-shape-bottom: #4f46e5;
+  --elah-clip-shape-accent: #a5b4fc;
+
+  --elah-clip-freehand-top:    #34d399;
+  --elah-clip-freehand-mid:    #10b981;
+  --elah-clip-freehand-bottom: #059669;
+  --elah-clip-freehand-accent: #6ee7b7;
+
+  /* Timeline chrome — menus, dialogs, transitions, clip effects (cool dark). */
+  --elah-text-on-clip: rgba(255, 255, 255, 0.95);
+
+  --elah-selection-border: #00c2ff;
+  --elah-selection-glow:   rgba(0, 194, 255, 0.4);
+
+  --elah-transition-line:       rgba(107, 140, 255, 0.9);
+  --elah-transition-line-hover: rgba(255, 255, 255, 0.55);
+  --elah-transition-line-idle:  rgba(255, 255, 255, 0.18);
+  --elah-transition-fill:       #3c3e94;
+  --elah-transition-stroke:     #525480;
+  --elah-transition-add-fill:   rgba(255, 255, 255, 0.12);
+  --elah-transition-add-stroke: rgba(255, 255, 255, 0.7);
+
+  --elah-menu-bg:     #1e2433;
+  --elah-menu-border: #2d3548;
+  --elah-menu-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --elah-popover-bg:               #1a1f2b;
+  --elah-popover-border:           #2d3548;
+  --elah-popover-shadow:           0 8px 32px rgba(0, 0, 0, 0.6);
+  --elah-popover-option-bg:        #232938;
+  --elah-popover-option-bg-hover:  #2d3548;
+  --elah-popover-option-bg-active: #3b4a6b;
+  --elah-popover-accent:           #6b8cff;
+  --elah-popover-accent-text:      #a5b4fc;
+  --elah-popover-icon:             #9ca3af;
+
+  --elah-dialog-overlay:          rgba(5, 7, 12, 0.6);
+  --elah-dialog-bg:               #171d2b;
+  --elah-dialog-border:           #232938;
+  --elah-dialog-shadow:           0 24px 60px rgba(0, 0, 0, 0.55);
+  --elah-dialog-option-bg:        #1b2230;
+  --elah-dialog-option-bg-hover:  #222b3c;
+  --elah-dialog-option-border:    #2a3142;
+  --elah-dialog-primary-border:   #2563eb;
+  --elah-dialog-primary-bg:       rgba(37, 99, 235, 0.16);
+  --elah-dialog-primary-bg-hover: rgba(37, 99, 235, 0.28);
+
+  --elah-danger-text:     #ff6b6b;
+  --elah-danger-text-alt: #f87171;
+  --elah-danger-bg-hover: rgba(255, 107, 107, 0.12);
+  --elah-danger-border:   #3f2a2a;
+
+  /* Flat clip treatment to match the Figma — minimal gloss/highlight/shadow. */
+  --elah-effect-gloss:                  rgba(255, 255, 255, 0.04);
+  --elah-effect-inner-highlight:        rgba(255, 255, 255, 0.04);
+  --elah-effect-inner-highlight-strong: rgba(255, 255, 255, 0.06);
+  --elah-effect-clip-shadow:            0 1px 2px rgba(0, 0, 0, 0.25);
+  --elah-effect-tile-separator:         rgba(0, 0, 0, 0.28);
+  --elah-effect-waveform:               rgba(255, 255, 255, 0.85);
+  --elah-effect-placeholder-bg:         rgba(0, 0, 0, 0.22);
+  --elah-effect-placeholder-border:     rgba(255, 255, 255, 0.08);
+  --elah-effect-trim-scrim:             rgba(0, 0, 0, 0.35);
+  --elah-effect-label-shadow:           0 1px 2px rgba(0, 0, 0, 0.45);
+  --elah-effect-delete-btn-bg:          rgba(0, 0, 0, 0.5);
+  --elah-effect-delete-btn-border:      rgba(255, 255, 255, 0.35);
+  --elah-effect-delete-btn-text:        #ffffff;
+
+  /* Editor overlays / toasts / preview. Stage outline follows the accent;
+     selection affordances and toasts are intrinsic editor chrome (literal). */
+  --elah-preview-bg:       #06070a;
+  --elah-stage-border:     rgba(0, 194, 255, 0.45);
+  --elah-stage-glow:       0 0 20px rgba(0, 194, 255, 0.08);
+  --elah-selection-color:  #4c9aff;
+  --elah-selection-handle: #ffffff;
+  --elah-danger-bg:        #3a2418;
+  --elah-info-bg:          #1a2433;
+  --elah-info-border:      #355070;
+  --elah-info-text:        #c8d8f0;
+
+  /* Scrims and spinners drawn over the preview surface, plus the clip speed
+     badge. Deliberately literal: these sit on top of decoded video, so they
+     read against the footage rather than against the panel palette. Mirrors
+     the same block in packages/editor/src/styles/tokens.css. */
+  --elah-overlay-scrim:    rgba(0, 0, 0, 0.7);
+  --elah-overlay-text:     #ffffff;
+  --elah-overlay-border:   rgba(255, 255, 255, 0.3);
+  --elah-overlay-bg:       rgba(255, 255, 255, 0.1);
+  --elah-overlay-bg-hover: rgba(255, 255, 255, 0.2);
+  --elah-spinner-track:    rgba(255, 255, 255, 0.25);
+  --elah-spinner-head:     rgba(255, 255, 255, 0.9);
+  --elah-clip-badge-bg:    rgba(0, 0, 0, 0.55);
+  --elah-toast-shadow:     0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Figma: audio clips show a tinted waveform on a dark body — teal-green at rest,
+   blue when selected/active. The selected rule overrides the audio clip vars on
+   the clip element itself, so the `from-clip-audio-*` gradient utilities repaint;
+   --elah-effect-waveform cascades to the waveform bars. Hooks: data-clip-type /
+   data-selected on the ClipBlock root. */
+.elah-root [data-clip-type='audio'] {
+  --elah-effect-waveform: #248f6c; /* exact green waveform */
+}
+.elah-root [data-clip-type='audio'][data-selected='true'] {
+  --elah-clip-audio-top:    #2b4a82;
+  --elah-clip-audio-mid:    #1d3460;
+  --elah-clip-audio-bottom: #162245; /* exact blue body */
+  --elah-clip-audio-accent: #4370b2; /* exact blue border */
+  --elah-effect-waveform:   #4370b2; /* exact blue waveform */
+}
+
+/* Syntax highlight overrides */
+.shiki {
+  background: var(--color-surface-low) !important;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-family: var(--font-geist-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-highest);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline);
+}
+
+/* Hero entrance animation — pure CSS so the hero paints and animates before
+   hydration; framer-motion here would hold the LCP text at opacity 0 until
+   the JS bundle loads. Stagger via --fade-delay (integer step). */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    animation: fade-up 0.5s ease-out both;
+    animation-delay: calc(var(--fade-delay, 0) * 90ms);
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ── Landing v2 ───────────────────────────────────────────────────────────────
+   The redesigned marketing home (components/landing/*). Its dark tokens ALIAS
+   the site's --color-* scale (which is the editor's palette), so there is one
+   place to change a colour. The token names are kept: components consume them
+   through inline styles and lv-* classes. Tokens are scoped to .landing-root.
+
+   Light values stay literal. The site is dark-only (ThemeProvider is fixed and
+   layout.tsx adds .dark pre-paint), and the light --color-* scale is warm, so
+   aliasing it would change this block's cool light values for no visible gain. */
+
+.landing-root {
+  --bg: #f7f9fc;
+  --bg2: #ffffff;
+  --card: #ffffff;
+  --elev: #e9eef6;
+  --line: #dde3ee;
+  --line2: #e8edf5;
+  --text: #0d1320;
+  --muted: #5a6578;
+  --faint: #8b95a8;
+  --accent: #0086c9;
+  --ink: #ffffff;
+  --nav: rgba(247, 249, 252, 0.82);
+  --code: #0a0d14;
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark .landing-root {
+  --bg: var(--color-surface);
+  --bg2: var(--color-surface-low);
+  --card: var(--color-surface-container);
+  --elev: var(--color-surface-high);
+  --line: var(--color-outline-variant);
+  --line2: var(--color-outline-subtle);
+  --text: var(--color-on-surface);
+  --muted: var(--color-on-surface-variant);
+  --accent: var(--color-primary);
+  --code: var(--color-surface-low);
+
+  /* Landing-only, kept literal on purpose:
+     --faint  third text tier (5.3:1); no other page uses one, and its value is
+              not on the editor ramp, so it is not promoted to a site token.
+     --ink    dark text on the accent fill; #04202a, a hair off the site's
+              --color-on-primary (#06212b), kept so / renders byte-identical.
+     --nav    the glass-pill fill is --bg at 78% alpha; CSS cannot alias a
+              colour with an alpha channel without color-mix. */
+  --faint: #7a858b;
+  --ink: #04202a;
+  --nav: rgba(6, 7, 10, 0.78);
+}
+
+/* Responsive split: the design swaps a desktop product-shot for a phone mockup
+   at 760px. Data attributes let the same markup carry both. */
+@media (max-width: 760px) {
+  .landing-root [data-lv-desktop] {
+    display: none !important;
+  }
+}
+@media (min-width: 761px) {
+  .landing-root [data-lv-mobile] {
+    display: none !important;
+  }
+}
+
+/* Floating glass nav — a short, centered pill hovering over the page. The
+   shell is click-through so only the pill itself catches pointer events. */
+.landing-root .lv-nav-shell {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 14px 16px 0;
+  pointer-events: none;
+  /* Collapse the shell's flow height so the hero starts at the very top and
+     the pill genuinely floats over it. Hero padding accounts for the overlap. */
+  margin-bottom: -62px;
+}
+.landing-root .lv-nav {
+  pointer-events: auto;
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--bg2) 82%, transparent),
+      color-mix(in oklab, var(--bg) 62%, transparent)
+    ),
+    var(--nav);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 10px 30px -14px rgba(13, 19, 32, 0.45),
+    0 2px 10px rgba(13, 19, 32, 0.08);
+  transition: box-shadow 0.28s, border-color 0.28s, transform 0.28s, border-radius 0.2s;
+}
+.dark .landing-root .lv-nav {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 14px 40px -16px rgba(0, 0, 0, 0.85),
+    0 2px 10px rgba(0, 0, 0, 0.35);
+}
+/* Top-down sheen: the gloss highlight rolling off the upper edge. */
+.landing-root .lv-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0.08) 44%,
+    transparent 62%
+  );
+}
+.dark .landing-root .lv-nav::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.02) 44%,
+    transparent 62%
+  );
+}
+/* Accent filament along the top edge, fading out at both ends. */
+.landing-root .lv-nav::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--accent) 65%, transparent),
+    transparent
+  );
+  opacity: 0.75;
+}
+.landing-root .lv-nav:hover {
+  border-color: color-mix(in oklab, var(--accent) 34%, var(--line));
+}
+.dark .landing-root .lv-nav:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 16px 46px -16px rgba(0, 0, 0, 0.9),
+    0 0 22px -6px color-mix(in oklab, var(--accent) 32%, transparent);
+}
+/* Open mobile menu: relax the pill into a rounded panel. */
+.landing-root .lv-nav[data-open='true'] {
+  border-radius: 22px;
+}
+.landing-root .lv-nav[data-open='true']::after {
+  opacity: 0;
+}
+/* The dropdown panel overlays the page instead of pushing it down — it's
+   absolutely positioned off the pill rather than sitting in normal flow. */
+.landing-root .lv-nav-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--bg2) 82%, transparent),
+      color-mix(in oklab, var(--bg) 62%, transparent)
+    ),
+    var(--nav);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  box-shadow:
+    0 10px 30px -14px rgba(13, 19, 32, 0.45),
+    0 2px 10px rgba(13, 19, 32, 0.08);
+}
+.dark .landing-root .lv-nav-panel {
+  box-shadow:
+    0 14px 40px -16px rgba(0, 0, 0, 0.85),
+    0 2px 10px rgba(0, 0, 0, 0.35);
+}
+/* Glossy CTA — gradient fill plus an inner top highlight. */
+.landing-root .lv-nav-cta {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, #fff 22%, var(--accent)),
+    var(--accent)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 0 16px color-mix(in oklab, var(--accent) 34%, transparent);
+}
+/* The version pill is the first thing to go when the bar gets tight. */
+@media (max-width: 1000px) {
+  .landing-root [data-lv-wide] {
+    display: none !important;
+  }
+}
+
+/* FAQ accordions — native <details>, custom caret, no default marker. */
+.landing-root details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.landing-root details > summary::-webkit-details-marker {
+  display: none;
+}
+.landing-root details[open] .lv-faq-caret {
+  transform: rotate(45deg);
+}
+
+/* Interaction states (the design expressed these via a non-standard
+   style-hover attribute; realised here as scoped hover rules). */
+.landing-root .lv-navlink:hover {
+  color: var(--text);
+  background: var(--elev);
+}
+.landing-root .lv-ghost:hover {
+  color: var(--text);
+}
+.landing-root .lv-pill:hover,
+.landing-root .lv-outline:hover,
+.landing-root .lv-copy:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.landing-root .lv-hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 6%, transparent),
+    0 8px 20px color-mix(in oklab, var(--accent) 18%, transparent);
+}
+.landing-root .lv-hero-btn:active {
+  transform: translateY(0);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, white 6%, transparent);
+}
+.landing-root .lv-accent-btn:hover {
+  filter: brightness(1.1);
+}
+.landing-root .lv-feature:hover {
+  background: var(--card);
+}
+.landing-root .lv-pgcard:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 40px color-mix(in oklab, var(--accent) 12%, transparent);
+}
+.landing-root .lv-launch:hover {
+  gap: 10px;
+}
+.landing-root .lv-footlink:hover {
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes lv-rise {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes lv-phSweep {
+    from {
+      left: calc(92px + (100% - 92px) * 0.03);
+    }
+    to {
+      left: calc(92px + (100% - 92px) * 0.93);
+    }
+  }
+  @keyframes lv-phSweepMobile {
+    from {
+      left: calc(42px + (100% - 42px) * 0.05);
+    }
+    to {
+      left: calc(42px + (100% - 42px) * 0.92);
+    }
+  }
+  @keyframes lv-phSweepPct {
+    from {
+      left: 5%;
+    }
+    to {
+      left: 93%;
+    }
+  }
+  @keyframes lv-flowDot {
+    0% {
+      top: -4px;
+      opacity: 0;
+    }
+    25% {
+      opacity: 1;
+    }
+    75% {
+      opacity: 1;
+    }
+    100% {
+      top: calc(100% - 2px);
+      opacity: 0;
+    }
+  }
+  @keyframes lv-glowPulse {
+    0%,
+    100% {
+      opacity: 0.65;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes lv-cursorBlink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes lv-cliLine {
+    0%,
+    10% {
+      opacity: 0;
+    }
+    20%,
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes lv-tagCycle {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.94);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

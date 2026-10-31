@@ -1,0 +1,73 @@
+{
+  "name": "@elah/timeline",
+  "version": "0.6.0",
+  "description": "React timeline UI for the Elah video engine — tracks, clips, ruler, playhead, drag and trim gestures",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": ["*.css"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json && tailwindcss -c ./tailwind.config.ts -i ./src/styles/index.css -o ./dist/styles.css --minify"
+  },
+  "keywords": [
+    "video-editor",
+    "timeline",
+    "react",
+    "timeline-component",
+    "video-timeline",
+    "clips",
+    "tracks",
+    "drag-drop",
+    "trim",
+    "scrub",
+    "typescript",
+    "browser"
+  ],
+  "homepage": "https://www.elah.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elahlabs/elah.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elahlabs/elah/issues"
+  },
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "lucide-react": ">=0.400.0"
+  },
+  "dependencies": {
+    "@elah/core": "^0.6.0",
+    "@elah/react": "^0.6.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.21",
+    "jsdom": "^29.1.1",
+    "lucide-react": "^0.511.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.6"
+  }
+}

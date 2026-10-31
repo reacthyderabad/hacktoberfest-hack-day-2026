@@ -1,7 +1,22 @@
-# Security guidance
+# Security Policy
 
-Do not commit API keys, tokens, passwords, personal data, or private media to this repository or your public project repository. Document environment variable names and provide sample values only.
+## Supported versions
 
-If a credential is exposed, revoke or rotate it immediately; deleting the file alone does not remove it from Git history.
+Elah is pre-1.0. Security fixes are made against the latest published release of each
+package, currently `@elah/core`, `@elah/react`, `@elah/timeline` and `@elah/editor`
+**0.6.x**, and `@elah/cli` **0.1.x**. Older versions are not patched; upgrade to the
+latest release.
 
-For a vulnerability involving a participant project, use that project's private reporting channel. For sensitive issues in this repository, use GitHub's private vulnerability reporting if enabled, or contact an organizer privately. Do not include exploit details, credentials, or personal data in a public issue.
+## Reporting a vulnerability
+
+Please do not open a public issue for a security problem.
+
+Report it privately through GitHub: open the repository's **Security** tab and choose
+**Report a vulnerability** (https://github.com/elahlabs/elah/security/advisories/new). Include
+the affected package and version, a description of the impact, and the smallest reproduction
+you can. If that option is unavailable to you, open an issue that says only that you have a
+security report and asks for a private way to send it, without details.
+
+The headless render server (`elah serve`) is the part of the project most exposed to
+untrusted input; see [`docs/deploy-render-server.md`](./docs/deploy-render-server.md) for its
+security notes before deploying it.

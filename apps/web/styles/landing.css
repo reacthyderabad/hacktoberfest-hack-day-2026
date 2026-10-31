@@ -1,0 +1,224 @@
+/* Landing motion layer. Imported after globals.css (app/layout.tsx). Everything
+   is scoped under .landing-root; the base lv-* rules and their keyframes stay
+   in globals.css. Colour tokens (--accent, --line, ...) come from there. */
+
+/* ── Off-screen pause ─────────────────────────────────────────────────────────
+   useInView() writes data-inview="true|false" on a container. While it reads
+   "false" every infinite animation inside it (lv-phSweep*, lv-glowPulse,
+   lv-flowDot, lv-cursorBlink, lv-cliLine, lv-tagCycle, aurora, drift) is
+   paused. The attribute is absent until the first observer callback, so
+   nothing is paused before then. */
+.landing-root [data-inview='false'],
+.landing-root [data-inview='false'] *,
+.landing-root [data-inview='false'] *::before,
+.landing-root [data-inview='false'] *::after {
+  /* !important is load-bearing, not defensive. The mockup and the card headers
+     declare their loops with the inline `animation:` shorthand, which sets
+     animation-play-state to `running` in the style attribute — a plain
+     stylesheet declaration loses to that every time, so without this the pause
+     silently does nothing and every off-screen loop keeps painting. */
+  animation-play-state: paused !important;
+}
+
+/* ── Spotlight ────────────────────────────────────────────────────────────────
+   Position comes from --spot-x / --spot-y, opacity from --spot-o, all written
+   by Spotlight.tsx straight onto the element. */
+.landing-root .lv-spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in oklab, var(--accent) 15%, transparent),
+    transparent 70%
+  );
+}
+
+/* ── Hero backdrop ────────────────────────────────────────────────────────────
+   Grid (masked to fade toward the edges), two drifting aurora blobs and a faint
+   SVG noise overlay. All aria-hidden in the markup. */
+.landing-root .lv-hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--line) 36%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--line) 36%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 34%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 62% at 50% 34%, #000 30%, transparent 100%);
+}
+.landing-root .lv-aurora {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+.landing-root .lv-aurora-a {
+  width: 520px;
+  height: 380px;
+  left: 8%;
+  top: -80px;
+  background: color-mix(in oklab, var(--accent) 26%, transparent);
+  animation: lv-auroraA 26s ease-in-out infinite alternate;
+}
+.landing-root .lv-aurora-b {
+  width: 460px;
+  height: 340px;
+  right: 6%;
+  top: 40px;
+  background: color-mix(in oklab, var(--accent) 12%, var(--elev));
+  animation: lv-auroraB 32s ease-in-out infinite alternate;
+}
+.landing-root .lv-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Gradient headline span: a slow background-position drift. */
+.landing-root .lv-grad-text {
+  background-size: 260% 100%;
+  animation: lv-gradDrift 14s ease-in-out infinite alternate;
+}
+
+/* Primary hero button: the nav CTA gloss plus a lift. */
+.landing-root .lv-cta-primary {
+  transition: transform 0.18s, filter 0.18s;
+}
+.landing-root .lv-cta-primary:hover {
+  transform: translateY(-2px);
+}
+.landing-root .lv-cta-primary:active {
+  transform: translateY(0);
+}
+
+/* Nav scroll-progress: the existing ::after filament is now a bar. Scale is
+   driven from LandingNav through --lv-progress (a framer-motion value written
+   straight to the element). With no variable set it falls back to 1, which is
+   the original static filament. */
+.landing-root .lv-nav::after {
+  transform-origin: left center;
+  transform: scaleX(var(--lv-progress, 1));
+  will-change: transform;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--accent) 30%, transparent),
+    var(--accent)
+  );
+  opacity: 0.9;
+}
+/* Framer owns the transform on the pill (compact scale); drop the CSS one. */
+.landing-root .lv-nav {
+  transition: box-shadow 0.28s, border-color 0.28s, border-radius 0.2s;
+}
+
+/* Tilted mockup layer. */
+.landing-root .lv-tilt-mockup {
+  will-change: transform;
+}
+
+.landing-root .lv-accordion-btn {
+  padding: 19px 0;
+  font-weight: 500;
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────────────────── */
+@keyframes lv-auroraA {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(90px, 40px, 0) scale(1.15);
+  }
+}
+@keyframes lv-auroraB {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(-100px, 30px, 0) scale(0.92);
+  }
+}
+@keyframes lv-gradDrift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+/* ── Focus rings ──────────────────────────────────────────────────────────────
+   The page had no visible focus styling. 2px accent, 3px offset. */
+.landing-root .lv-hero-btn:focus-visible,
+.landing-root .lv-launch:focus-visible,
+.landing-root .lv-accent-btn:focus-visible,
+.landing-root .lv-navlink:focus-visible,
+.landing-root .lv-ghost:focus-visible,
+.landing-root .lv-pill:focus-visible,
+.landing-root .lv-outline:focus-visible,
+.landing-root .lv-footlink:focus-visible,
+.landing-root .lv-pgcard a:focus-visible,
+.landing-root .lv-feature a:focus-visible,
+.landing-root .lv-accordion-btn:focus-visible,
+.landing-root .lv-copy button:focus-visible,
+.landing-root .lv-snippet-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   Closing block: no landing animation runs at all. The framer-motion
+   primitives render static markup on their own (useReducedMotion); this
+   covers every CSS animation. */
+@media (prefers-reduced-motion: reduce) {
+  .landing-root *,
+  .landing-root *::before,
+  .landing-root *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  /* CardHeader's CLI lines start at opacity:0 and rely on lv-cliLine to show. */
+  .landing-root [style*='lv-cliLine'] {
+    opacity: 1 !important;
+  }
+  .landing-root .lv-spotlight::before {
+    display: none;
+  }
+}
+
+/* ── No scripting ─────────────────────────────────────────────────────────────
+   The scroll reveals are framer-motion, which server-renders every revealed
+   element in its "before" state — opacity 0, nudged down — and only clears that
+   on hydration. Where scripting is unavailable the page would otherwise stay
+   blank, headline included; the CSS-keyframe reveals this replaced degraded on
+   their own, because a CSS animation still runs without JS.
+
+   This lives here rather than in a <noscript><style> in the page: React 19
+   hoists <style> elements out to <head>, and nesting one inside <noscript>
+   broke hydration for the surrounding subtree.
+
+   An attribute selector so it covers every primitive without each opting in. */
+@media (scripting: none) {
+  .landing-root [style*='opacity:0'] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
